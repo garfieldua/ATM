@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+//Main window
 @SuppressWarnings("serial")
 public class ATMView extends JFrame {
 
