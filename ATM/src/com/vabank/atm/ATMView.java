@@ -27,7 +27,7 @@ public class ATMView extends JFrame {
 			public void run() {
 				try {
 					ATMView frame = new ATMView();
-					frame.setTitle("NoATM");
+					frame.setTitle("ATM");
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
