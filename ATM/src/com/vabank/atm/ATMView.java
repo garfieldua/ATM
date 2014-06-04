@@ -5,11 +5,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class ATMView extends JFrame {
 
 	private JPanel contentPane;
+	private JTextField cardNumberField;
 
 	/**
 	 * Launch the application.
@@ -20,7 +27,6 @@ public class ATMView extends JFrame {
 				try {
 					ATMView frame = new ATMView();
 					frame.setTitle("ATM");
-					frame.setSize(800, 600);
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -35,14 +41,37 @@ public class ATMView extends JFrame {
 	 */
 	public ATMView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(10, 11, 121, 23);
-		contentPane.add(btnNewButton);
+		JButton btnClean = new JButton("Clean");
+		btnClean.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnClean.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnClean.setBounds(640, 456, 144, 42);
+		contentPane.add(btnClean);
+		
+		JLabel lblWelcomeLabel = new JLabel("Please input your card number");
+		lblWelcomeLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		lblWelcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWelcomeLabel.setBounds(0, 200, 784, 42);
+		contentPane.add(lblWelcomeLabel);
+		
+		cardNumberField = new JTextField();
+		cardNumberField.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		cardNumberField.setHorizontalAlignment(SwingConstants.CENTER);
+		cardNumberField.setBounds(86, 253, 613, 42);
+		contentPane.add(cardNumberField);
+		cardNumberField.setColumns(10);
+		
+		JButton btnNext = new JButton("Next");
+		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnNext.setBounds(640, 509, 144, 42);
+		contentPane.add(btnNext);
 	}
 }
