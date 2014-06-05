@@ -1,31 +1,29 @@
 package com.vabank.atm;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
-
-import java.awt.Font;
-
-import javax.swing.JTextField;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-//Main window
-@SuppressWarnings("serial")
-public class ATMView extends JFrame {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 
-	private JPanel contentPane;
-	private JTextField cardNumberField;
+public class InputPinView extends JFrame {
+
+	// put back to private!
+	public static JPanel contentPane;
+	private JTextField pinField;
 
 	/**
 	 * Launch the application.
@@ -34,7 +32,7 @@ public class ATMView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ATMView frame = new ATMView();
+					InputPinView frame = new InputPinView();
 					frame.setTitle("ATM");
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
@@ -48,7 +46,7 @@ public class ATMView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ATMView() {
+	public InputPinView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
@@ -56,29 +54,20 @@ public class ATMView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		cardNumberField = new JTextField();
-		cardNumberField.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		cardNumberField.setHorizontalAlignment(SwingConstants.CENTER);
-		cardNumberField.setBounds(200, 253, 384, 42);
-		contentPane.add(cardNumberField);
-		cardNumberField.setColumns(10);
-		cardNumberField.setDocument(new JTextFieldLimit(16));
+		pinField = new JPasswordField();
+		((JPasswordField) pinField).setEchoChar('*');
+		pinField.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		pinField.setHorizontalAlignment(SwingConstants.CENTER);
+		pinField.setBounds(299, 253, 184, 42);
+		contentPane.add(pinField);
+		pinField.setColumns(10);
+		pinField.setDocument(new JTextFieldLimit(4));
 		
-		JButton btnClean = new JButton("Clean");
-		btnClean.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnClean.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cardNumberField.setText("");
-			}
-		});
-		btnClean.setBounds(640, 456, 144, 42);
-		contentPane.add(btnClean);
-		
-		JLabel lblWelcomeLabel = new JLabel("Please input your card number");
-		lblWelcomeLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		lblWelcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblWelcomeLabel.setBounds(0, 163, 784, 42);
-		contentPane.add(lblWelcomeLabel);
+		JLabel lblWelcomePin = new JLabel("Enter your PIN number");
+		lblWelcomePin.setFont(new Font("Tahoma", Font.PLAIN, 26));
+		lblWelcomePin.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWelcomePin.setBounds(0, 163, 784, 42);
+		contentPane.add(lblWelcomePin);
 		
 		
 		JButton btnNext = new JButton("Next");
@@ -117,6 +106,15 @@ public class ATMView extends JFrame {
 		String timeStamp = new SimpleDateFormat("HH:mm")
 				.format(Calendar.getInstance().getTime());
 		lblTime.setText(timeStamp);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnBack.setBounds(0, 509, 144, 42);
+		contentPane.add(btnBack);
 
 		Timer t = new Timer(1000, updateClockAction);
 		t.start();

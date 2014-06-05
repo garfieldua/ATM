@@ -2,10 +2,9 @@ package com.vabank.atm;
 
 import java.security.Key;
 
-import javax.crypto.Cipher;
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import sun.misc.BASE64Encoder;
-import sun.misc.BASE64Decoder;
+import sun.misc.*;
 
 public class AESEncpypt {
 
