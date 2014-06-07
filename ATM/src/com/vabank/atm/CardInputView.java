@@ -37,6 +37,7 @@ public class CardInputView extends JPanel {
 		btnClean.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cardNumberField.setText("");
+				cardNumberField.requestFocus();
 			}
 		});
 		btnClean.setBounds(584, 456, 200, 42);
@@ -102,6 +103,9 @@ public class CardInputView extends JPanel {
 
 		Timer t = new Timer(1000, updateClockAction);
 		t.start();
+		
+		cardNumberField.requestFocus();
+		cardNumberField.grabFocus();
 	}
 
 }
