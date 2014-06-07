@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+@SuppressWarnings("serial")
 public class PinInputView extends JPanel {
 
 	/**
@@ -35,7 +36,7 @@ public class PinInputView extends JPanel {
 			}
 		});
 		button.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		button.setBounds(10, 509, 144, 42);
+		button.setBounds(10, 509, 200, 42);
 		add(button);
 
 		JLabel lblLogo = new JLabel("VA Bank");
@@ -63,8 +64,18 @@ public class PinInputView extends JPanel {
 		lblTime.setText(timeStamp);
 		
 		JButton button_1 = new JButton("Next");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel contentPane = new SelectTransactionView();
+				ATMView.instance.setContentPane(contentPane);
+				ATMView.instance.invalidate();
+				ATMView.instance.repaint();
+				ATMView.instance.setLocationRelativeTo(null);
+				ATMView.instance.setVisible(true);
+			}
+		});
 		button_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		button_1.setBounds(640, 509, 144, 42);
+		button_1.setBounds(584, 509, 200, 42);
 		add(button_1);
 		
 		JLabel lblEnterYourPin = new JLabel("Enter your PIN number");

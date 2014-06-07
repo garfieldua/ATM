@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,6 +22,7 @@ public class CardInputView extends JPanel {
 	 */
 	public CardInputView() {
 		setLayout(null);
+		
 		final JTextField cardNumberField;
 		cardNumberField = new JTextField();
 		cardNumberField.setFont(new Font("Tahoma", Font.PLAIN, 24));
@@ -37,7 +39,7 @@ public class CardInputView extends JPanel {
 				cardNumberField.setText("");
 			}
 		});
-		btnClean.setBounds(640, 456, 144, 42);
+		btnClean.setBounds(584, 456, 200, 42);
 		add(btnClean);
 		
 		JLabel lblWelcomeLabel = new JLabel("Please input your card number");
@@ -71,7 +73,7 @@ public class CardInputView extends JPanel {
 			}
 		});
 		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnNext.setBounds(640, 509, 144, 42);
+		btnNext.setBounds(584, 509, 200, 42);
 		add(btnNext);
 		
 		JLabel lblLogo = new JLabel("VA Bank");

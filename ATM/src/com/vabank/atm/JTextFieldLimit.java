@@ -3,6 +3,7 @@ package com.vabank.atm;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+@SuppressWarnings("serial")
 public class JTextFieldLimit extends PlainDocument {
 	private int limit;
 	// optional uppercase conversion
