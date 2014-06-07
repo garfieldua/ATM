@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DBConnector {
 	private static DBConnector instance = new DBConnector();
-	public static final String URL = "jdbc:mysql://mysql5.000webhost.com/a8561715_ATM";
-	public static final String USER = "a8561715_root";
-	public static final String PASSWORD = "ATMpr0ject";
+	public static final String URL = "jdbc:mysql://37.140.192.173/u0012798_default";
+	public static final String USER = "u0012798_default";
+	public static final String PASSWORD = "74S**7q2";
 	public static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
 
 	// private constructor

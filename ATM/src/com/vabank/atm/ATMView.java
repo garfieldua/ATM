@@ -1,6 +1,7 @@
 package com.vabank.atm;
 
 import java.awt.EventQueue;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -44,5 +45,12 @@ public class ATMView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
+		
+		try {
+			ConTest.main();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
