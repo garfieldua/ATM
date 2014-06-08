@@ -2,6 +2,7 @@ package com.vabank.atm;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -105,7 +106,14 @@ public class PinInputView extends JPanel {
 					ATMView.instance.setVisible(true);
 				}
 				else {
-					//TODO: incorrect pin!
+					pinField.setText("");
+					pinField.requestFocus();
+					
+					//incorrect pin!
+					JOptionPane.showMessageDialog(null,
+						    "Wrong pin number",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

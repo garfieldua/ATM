@@ -9,6 +9,7 @@ import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -57,18 +58,6 @@ public class CardInputView extends JPanel {
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				/*
-				 * TODO:
-				 * Check if there is such card number - proceed to pin
-				 
-				enterPin = new Pin();
-				frame.setContentPane(enterPin);
-				frame.invalidate();
-				frame.repaint();
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);*/
-				
-				
 				//check if there's such a card
 				JSONObject jsonObj = null;
 				try {
@@ -90,7 +79,15 @@ public class CardInputView extends JPanel {
 					ATMView.instance.setVisible(true);	
 				}
 				else {
-					//TODO: tell the user that he has intupped wrong card num
+					//clearing incorrect fields
+					cardNumberField.setText("");
+					cardNumberField.requestFocus();
+					
+					//tell the user that he has inputed wrong card number
+					JOptionPane.showMessageDialog(null,
+						    "Card number is incorrect",
+						    "Wrong card number",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
