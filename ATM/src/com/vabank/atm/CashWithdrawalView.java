@@ -1,16 +1,12 @@
 package com.vabank.atm;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
@@ -21,30 +17,6 @@ public class CashWithdrawalView extends JPanel {
 	 */
 	public CashWithdrawalView() {
 		setLayout(null);
-
-		JLabel lblLogo = new JLabel("VA Bank");
-		lblLogo.setForeground(new Color(0, 0, 255));
-		lblLogo.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		lblLogo.setBounds(10, 11, 134, 32);
-		add(lblLogo);
-		
-		final JLabel lblTime = new JLabel("");
-		lblTime.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTime.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		lblTime.setBounds(640, 11, 134, 32);
-		add(lblTime);
-		
-		ActionListener updateClockAction = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String timeStamp = new SimpleDateFormat("HH:mm")
-						.format(Calendar.getInstance().getTime());
-				lblTime.setText(timeStamp);
-			}
-		};
-
-		String timeStamp = new SimpleDateFormat("HH:mm")
-				.format(Calendar.getInstance().getTime());
-		lblTime.setText(timeStamp);
 		
 		JLabel lblWhichAmountDo = new JLabel("Which amount do you want to withdraw?");
 		lblWhichAmountDo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -59,7 +31,7 @@ public class CashWithdrawalView extends JPanel {
 				ATMView.instance.setContentPane(contentPane);
 				ATMView.instance.invalidate();
 				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(null);
+				ATMView.instance.setLocationRelativeTo(ATMView.instance);
 				ATMView.instance.setVisible(true);
 			}
 		});
@@ -110,8 +82,8 @@ public class CashWithdrawalView extends JPanel {
 		btnUah_3.setBounds(584, 350, 200, 42);
 		add(btnUah_3);
 
-		Timer t = new Timer(1000, updateClockAction);
-		t.start();
+		add(UITemplates.atmLogo);
+		add(UITemplates.atmTime);
 	}
 
 }

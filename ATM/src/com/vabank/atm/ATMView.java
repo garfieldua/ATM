@@ -47,7 +47,7 @@ public class ATMView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(ATMView.instance);
 		
 		//That was afor test
 		/*

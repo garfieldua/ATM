@@ -1,11 +1,8 @@
 package com.vabank.atm;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,7 +10,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 
 import org.json.simple.JSONObject;
 
@@ -36,16 +32,15 @@ public class CardInputView extends JPanel {
 		add(cardNumberField);
 		cardNumberField.setColumns(10);
 		cardNumberField.setDocument(new JTextFieldLimit(16));
-		
-		JButton btnClean = new JButton("Clean");
-		btnClean.setFont(new Font("Tahoma", Font.PLAIN, 18));
+
+		JButton btnClean = UITemplates.createUIButton("Clean");
+		btnClean.setBounds(584, 456, 200, 42);
 		btnClean.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cardNumberField.setText("");
 				cardNumberField.requestFocus();
 			}
 		});
-		btnClean.setBounds(584, 456, 200, 42);
 		add(btnClean);
 		
 		JLabel lblWelcomeLabel = new JLabel("Please input your card number");
@@ -55,7 +50,7 @@ public class CardInputView extends JPanel {
 		add(lblWelcomeLabel);
 		
 		
-		JButton btnNext = new JButton("Next");
+		JButton btnNext = UITemplates.createUIButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//check if there's such a card
@@ -71,7 +66,7 @@ public class CardInputView extends JPanel {
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();
 					ATMView.instance.repaint();
-					ATMView.instance.setLocationRelativeTo(null);
+					ATMView.instance.setLocationRelativeTo(ATMView.instance);
 					ATMView.instance.setVisible(true);	
 				}
 				else {
@@ -80,7 +75,7 @@ public class CardInputView extends JPanel {
 					cardNumberField.requestFocus();
 					
 					//tell the user that he has inputed wrong card number
-					JOptionPane.showMessageDialog(null,
+					JOptionPane.showMessageDialog(ATMView.instance,
 						    "Card number is incorrect",
 						    "Wrong card number",
 						    JOptionPane.ERROR_MESSAGE);
@@ -88,39 +83,13 @@ public class CardInputView extends JPanel {
 				
 			}
 		});
-		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnNext.setBounds(584, 509, 200, 42);
 		add(btnNext);
 		
-		JLabel lblLogo = new JLabel("VA Bank");
-		lblLogo.setForeground(new Color(0, 0, 255));
-		lblLogo.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		lblLogo.setBounds(10, 11, 134, 32);
-		add(lblLogo);
-		
-		final JLabel lblTime = new JLabel("");
-		lblTime.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTime.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		lblTime.setBounds(640, 11, 134, 32);
-		add(lblTime);
-		
-		ActionListener updateClockAction = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String timeStamp = new SimpleDateFormat("HH:mm")
-						.format(Calendar.getInstance().getTime());
-				lblTime.setText(timeStamp);
-			}
-		};
-
-		String timeStamp = new SimpleDateFormat("HH:mm")
-				.format(Calendar.getInstance().getTime());
-		lblTime.setText(timeStamp);
-
-		Timer t = new Timer(1000, updateClockAction);
-		t.start();
+		add(UITemplates.atmLogo);
+		add(UITemplates.atmTime);
 		
 		cardNumberField.requestFocus();
-		cardNumberField.grabFocus();
 	}
 
 }
