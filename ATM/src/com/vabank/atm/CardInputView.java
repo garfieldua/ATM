@@ -22,10 +22,12 @@ public class CardInputView extends JPanel {
 	/**
 	 * Create the panel.
 	 */
+	
+	public static JTextField cardNumberField;
+	
 	public CardInputView() {
 		setLayout(null);
 		
-		final JTextField cardNumberField;
 		cardNumberField = new JTextField();
 		cardNumberField.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		cardNumberField.setHorizontalAlignment(SwingConstants.CENTER);
