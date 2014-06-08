@@ -20,28 +20,36 @@ public class UrlConnector {
 	private UrlConnector() {
 	}
 	
-	public static JSONObject getData(String link) throws Exception {
+	public static JSONObject getData(String link)  {
 		String urlstr = url + link;
-		URL obj = new URL(urlstr);
-		HttpURLConnection con;
-		con = (HttpURLConnection) obj.openConnection();
-		con.setRequestMethod("GET");
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine = in.readLine();
+		URL obj;
+		try {
+			obj = new URL(urlstr);
+			HttpURLConnection con;
+			con = (HttpURLConnection) obj.openConnection();
+			con.setRequestMethod("GET");
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine = in.readLine();
 
-		//while ((inputLine = in.readLine()) != null)
-		//System.out.println(inputLine);
+			//while ((inputLine = in.readLine()) != null)
+			//System.out.println(inputLine);
 
-		JSONParser parser = new JSONParser();
+			JSONParser parser = new JSONParser();
 
-		Object obj2 = parser.parse(inputLine);
-		JSONObject jsonObj = (JSONObject) obj2;
-		//System.out.println(jsonObj.get("paramsStr"));
-		// some string
+			Object obj2 = parser.parse(inputLine);
+			JSONObject jsonObj = (JSONObject) obj2;
+			//System.out.println(jsonObj.get("paramsStr"));
+			// some string
+			
+			in.close();
+			
+			return jsonObj;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		in.close();
-		
-		return jsonObj;
+		return null;
 	}
 	
 	private static JSONParser parser = new JSONParser();

@@ -13,6 +13,8 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.JButton;
 
+import org.json.simple.JSONObject;
+
 @SuppressWarnings("serial")
 public class ClientBalanceView extends JPanel {
 
@@ -52,7 +54,14 @@ public class ClientBalanceView extends JPanel {
 		lblYourBalanceIs.setBounds(0, 100, 784, 42);
 		add(lblYourBalanceIs);
 		
-		int moneyAmount = 10000;
+		//get money value from database
+		JSONObject jsonObj = null;
+		jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+		
+		String strMoney = (String) jsonObj.get("balance");
+		//System.out.println(strMoney);
+		
+		int moneyAmount = Integer.parseInt(strMoney);
 		JLabel lblMoneyAmount = new JLabel("");
 		lblMoneyAmount.setText(moneyAmount + " UAH");
 		lblMoneyAmount.setHorizontalAlignment(SwingConstants.CENTER);
