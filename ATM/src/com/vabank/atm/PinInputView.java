@@ -8,6 +8,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import org.json.simple.JSONObject;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -63,28 +65,13 @@ public class PinInputView extends JPanel {
 				.format(Calendar.getInstance().getTime());
 		lblTime.setText(timeStamp);
 		
-		JButton button_1 = new JButton("Next");
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JPanel contentPane = new SelectTransactionView();
-				ATMView.instance.setContentPane(contentPane);
-				ATMView.instance.invalidate();
-				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(null);
-				ATMView.instance.setVisible(true);
-			}
-		});
-		button_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		button_1.setBounds(584, 509, 200, 42);
-		add(button_1);
-		
 		JLabel lblEnterYourPin = new JLabel("Enter your PIN number");
 		lblEnterYourPin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEnterYourPin.setFont(new Font("Tahoma", Font.PLAIN, 26));
 		lblEnterYourPin.setBounds(0, 163, 784, 42);
 		add(lblEnterYourPin);
 		
-		JTextField pinField;
+		final JTextField pinField;
 		pinField = new JPasswordField();
 		((JPasswordField) pinField).setEchoChar('*');
 		pinField.setFont(new Font("Tahoma", Font.PLAIN, 24));
@@ -94,6 +81,38 @@ public class PinInputView extends JPanel {
 		pinField.setColumns(10);
 		pinField.setDocument(new JTextFieldLimit(4));
 
+		JButton button_1 = new JButton("Next");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//check if we can login with such card num and pin
+				JSONObject jsonObj = null;
+				try {
+					jsonObj = UrlConnector.getData("cardnum_login.php?card_num=" + CardInputView.cardNumberField.getText() + "&pin=" + pinField.getText() );
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Boolean id = (Boolean) jsonObj.get("cardnum_login");
+				System.out.println(id);
+				
+				if (id.booleanValue() == true) {
+					JPanel contentPane = new SelectTransactionView();
+					ATMView.instance.setContentPane(contentPane);
+					ATMView.instance.invalidate();
+					ATMView.instance.repaint();
+					ATMView.instance.setLocationRelativeTo(null);
+					ATMView.instance.setVisible(true);
+				}
+				else {
+					//TODO: incorrect pin!
+				}
+			}
+		});
+		button_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		button_1.setBounds(584, 509, 200, 42);
+		add(button_1);
+		
 		Timer t = new Timer(1000, updateClockAction);
 		t.start();
 	}
