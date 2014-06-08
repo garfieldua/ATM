@@ -1,16 +1,11 @@
 package com.vabank.atm;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
@@ -21,30 +16,6 @@ public class SelectTransactionView extends JPanel {
 	 */
 	public SelectTransactionView() {
 		setLayout(null);
-
-		JLabel lblLogo = new JLabel("VA Bank");
-		lblLogo.setForeground(new Color(0, 0, 255));
-		lblLogo.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		lblLogo.setBounds(10, 11, 134, 32);
-		add(lblLogo);
-		
-		final JLabel lblTime = new JLabel("");
-		lblTime.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTime.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		lblTime.setBounds(640, 11, 134, 32);
-		add(lblTime);
-		
-		ActionListener updateClockAction = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String timeStamp = new SimpleDateFormat("HH:mm")
-						.format(Calendar.getInstance().getTime());
-				lblTime.setText(timeStamp);
-			}
-		};
-
-		String timeStamp = new SimpleDateFormat("HH:mm")
-				.format(Calendar.getInstance().getTime());
-		lblTime.setText(timeStamp);
 		
 		JLabel lblSelectTransaction = new JLabel("Select Transaction");
 		lblSelectTransaction.setHorizontalAlignment(SwingConstants.CENTER);
@@ -59,7 +30,7 @@ public class SelectTransactionView extends JPanel {
 				ATMView.instance.setContentPane(contentPane);
 				ATMView.instance.invalidate();
 				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(null);
+				ATMView.instance.setLocationRelativeTo(ATMView.instance);
 				ATMView.instance.setVisible(true);
 			}
 		});
@@ -74,7 +45,7 @@ public class SelectTransactionView extends JPanel {
 				ATMView.instance.setContentPane(contentPane);
 				ATMView.instance.invalidate();
 				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(null);
+				ATMView.instance.setLocationRelativeTo(ATMView.instance);
 				ATMView.instance.setVisible(true);
 			}
 		});
@@ -89,7 +60,7 @@ public class SelectTransactionView extends JPanel {
 				ATMView.instance.setContentPane(contentPane);
 				ATMView.instance.invalidate();
 				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(null);
+				ATMView.instance.setLocationRelativeTo(ATMView.instance);
 				ATMView.instance.setVisible(true);
 			}
 		});
@@ -98,6 +69,16 @@ public class SelectTransactionView extends JPanel {
 		add(btnBalanceInquiry);
 		
 		JButton btnAccountSettings = new JButton("Account Settings");
+		btnAccountSettings.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel contentPane = new AccountSettingsView();
+				ATMView.instance.setContentPane(contentPane);
+				ATMView.instance.invalidate();
+				ATMView.instance.repaint();
+				ATMView.instance.setLocationRelativeTo(ATMView.instance);
+				ATMView.instance.setVisible(true);
+			}
+		});
 		btnAccountSettings.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnAccountSettings.setBounds(584, 456, 200, 42);
 		add(btnAccountSettings);
@@ -107,8 +88,8 @@ public class SelectTransactionView extends JPanel {
 		btnTransfer.setBounds(584, 350, 200, 42);
 		add(btnTransfer);
 
-		Timer t = new Timer(1000, updateClockAction);
-		t.start();
+		add(UITemplates.atmLogo);
+		add(UITemplates.atmTime);
 	}
 
 }

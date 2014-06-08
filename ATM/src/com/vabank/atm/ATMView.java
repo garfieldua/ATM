@@ -1,13 +1,9 @@
 package com.vabank.atm;
 
 import java.awt.EventQueue;
-import java.io.IOException;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import org.json.simple.parser.ParseException;
 
 //Main window
 @SuppressWarnings("serial")
@@ -47,7 +43,7 @@ public class ATMView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(ATMView.instance);
 		
 		//That was afor test
 		/*

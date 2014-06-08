@@ -1,10 +1,8 @@
 package com.vabank.atm;
 
-import static org.junit.Assert.*;
 import java.sql.ResultSet;
 import org.junit.Test;
 import java.sql.Connection;
-import com.mysql.jdbc.Statement;
 import java.sql.SQLException;
 
 public class TestDBConnector {
