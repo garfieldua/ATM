@@ -14,6 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import org.json.simple.JSONObject;
+
 @SuppressWarnings("serial")
 public class CardInputView extends JPanel {
 
@@ -64,13 +66,31 @@ public class CardInputView extends JPanel {
 				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);*/
 				
-				// if there is such a card
-				JPanel contentPane = new PinInputView();
-				ATMView.instance.setContentPane(contentPane);
-				ATMView.instance.invalidate();
-				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(null);
-				ATMView.instance.setVisible(true);
+				
+				//check if there's such a card
+				JSONObject jsonObj = null;
+				try {
+					jsonObj = UrlConnector.getData("cardnum_existance.php?card_num=" + cardNumberField.getText() );
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Boolean id = (Boolean) jsonObj.get("cardnum_exists");
+				System.out.println(id);
+				
+				if (id.booleanValue() == true) {
+					// if there is such a card
+					JPanel contentPane = new PinInputView();
+					ATMView.instance.setContentPane(contentPane);
+					ATMView.instance.invalidate();
+					ATMView.instance.repaint();
+					ATMView.instance.setLocationRelativeTo(null);
+					ATMView.instance.setVisible(true);	
+				}
+				else {
+					//TODO: tell the user that he has intupped wrong card num
+				}
+				
 			}
 		});
 		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));

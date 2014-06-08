@@ -7,29 +7,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class ConTest {
-	public static void main() throws IOException {
-		URL obj = new URL("http://niddua.tk/index.php");
-		HttpURLConnection con;
-		con = (HttpURLConnection) obj.openConnection();
-		con.setRequestMethod("GET");
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine = in.readLine();
-
-		//while ((inputLine = in.readLine()) != null)
-		//System.out.println(inputLine);
-
-		JSONParser parser = new JSONParser();
-
-		Object obj = parser.parse(json);
-		JSONObject jsonObj = (JSONObject) obj;
-		System.out.println(jsonObj.get("paramsStr"));
-		// some string
-
-		JsonObject jo = jsonObj.get("paramsObj");
-		System.out.println(jo.get("three"));
+	public static void main() throws Exception {
+		
+		JSONObject jsonObj = UrlConnector.getData("cardnum_existance.php?card_num=1111222233334444");
+		Boolean id = (Boolean) jsonObj.get("cardnum_exists");
 		
 		
-		in.close();
+		System.out.println(id);
 	}
 }

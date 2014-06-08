@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.json.simple.parser.ParseException;
+
 //Main window
 @SuppressWarnings("serial")
 public class ATMView extends JFrame {
@@ -34,8 +36,9 @@ public class ATMView extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws Exception 
 	 */
-	public ATMView() {
+	public ATMView() throws Exception {
 		setTitle("ATM");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,11 +49,19 @@ public class ATMView extends JFrame {
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
 		
+		//That was afor test
+		/*
 		try {
-			ConTest.main();
+			try {
+				ConTest.main();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 	}
 }
