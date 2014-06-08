@@ -87,16 +87,13 @@ public class PinInputView extends JPanel {
 				
 				//check if we can login with such card num and pin
 				JSONObject jsonObj = null;
-				try {
-					jsonObj = UrlConnector.getData("cardnum_login.php?card_num=" + CardInputView.cardNumberField.getText() + "&pin=" + pinField.getText() );
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Boolean id = (Boolean) jsonObj.get("cardnum_login");
-				System.out.println(id);
+				jsonObj = UrlConnector.getData("cardnum_login.php?card_num=" + CardInputView.cardNumberField.getText() + "&pin=" + pinField.getText() );
 				
-				if (id.booleanValue() == true) {
+				Boolean logged = (Boolean) jsonObj.get("cardnum_login");
+				//System.out.println(id);
+				
+				if (logged.booleanValue() == true) {
+					//ok, good login
 					JPanel contentPane = new SelectTransactionView();
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();

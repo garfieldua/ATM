@@ -71,16 +71,12 @@ public class CardInputView extends JPanel {
 				
 				//check if there's such a card
 				JSONObject jsonObj = null;
-				try {
-					jsonObj = UrlConnector.getData("cardnum_existance.php?card_num=" + cardNumberField.getText() );
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Boolean id = (Boolean) jsonObj.get("cardnum_exists");
-				System.out.println(id);
+				jsonObj = UrlConnector.getData("cardnum_existance.php?card_num=" + cardNumberField.getText() );
+
+				Boolean cardnum_exists = (Boolean) jsonObj.get("cardnum_exists");
+				//System.out.println(id);
 				
-				if (id.booleanValue() == true) {
+				if (cardnum_exists.booleanValue() == true) {
 					// if there is such a card
 					JPanel contentPane = new PinInputView();
 					ATMView.instance.setContentPane(contentPane);
