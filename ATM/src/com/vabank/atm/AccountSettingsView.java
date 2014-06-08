@@ -28,6 +28,16 @@ public class AccountSettingsView extends JPanel {
 		add(lblAccountSettings);
 		
 		JButton btnChangePin = new JButton("Change PIN");
+		btnChangePin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel contentPane = new ChangePinInputCurrentView();
+				ATMView.instance.setContentPane(contentPane);
+				ATMView.instance.invalidate();
+				ATMView.instance.repaint();
+				ATMView.instance.setLocationRelativeTo(ATMView.instance);
+				ATMView.instance.setVisible(true);
+			}
+		});
 		btnChangePin.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnChangePin.setBounds(584, 456, 200, 42);
 		add(btnChangePin);
