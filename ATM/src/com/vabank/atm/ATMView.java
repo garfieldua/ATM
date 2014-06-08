@@ -1,13 +1,9 @@
 package com.vabank.atm;
 
 import java.awt.EventQueue;
-import java.io.IOException;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import org.json.simple.parser.ParseException;
 
 //Main window
 @SuppressWarnings("serial")

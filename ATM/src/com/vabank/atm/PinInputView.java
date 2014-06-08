@@ -7,16 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
-
 import org.json.simple.JSONObject;
-
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 @SuppressWarnings("serial")
 public class PinInputView extends JPanel {
