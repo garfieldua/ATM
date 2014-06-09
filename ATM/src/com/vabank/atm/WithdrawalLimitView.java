@@ -9,6 +9,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import org.json.simple.JSONObject;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -28,7 +30,16 @@ public class WithdrawalLimitView extends JPanel {
 		lblCurrentWithdrawalLimit.setBounds(0, 100, 784, 42);
 		add(lblCurrentWithdrawalLimit);
 		
-		JLabel label = new JLabel("0 UAH");
+		//get withdrawal limit value from database
+		JSONObject jsonObj = null;
+		jsonObj = UrlConnector.getData("withdrawal_limit.php?card_num=" + CardInputView.cardNumberField.getText() );
+		
+		String strMoney = (String) jsonObj.get("withdrawal_limit");
+		//System.out.println(strMoney);
+		
+		int withdrawal_limit = Integer.parseInt(strMoney);
+		
+		JLabel label = new JLabel(withdrawal_limit + " UAH");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		label.setBounds(0, 139, 784, 63);
@@ -65,12 +76,43 @@ public class WithdrawalLimitView extends JPanel {
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel contentPane = new OperationSuccessfulView();
-				ATMView.instance.setContentPane(contentPane);
-				ATMView.instance.invalidate();
-				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(ATMView.instance);
-				ATMView.instance.setVisible(true);
+				
+				String slimit = newLimitField.getText();
+				
+				try 
+				{
+					Integer limit = Integer.parseInt(slimit);
+					
+					if (limit >= 0)
+					{
+						//send request to update
+						JSONObject jsonObj = null;
+						jsonObj = UrlConnector.getData("withdrawal_limit_change.php?card_num=" + CardInputView.cardNumberField.getText() + "&limit=" + limit);
+						
+						Boolean request_done = (Boolean) jsonObj.get("response");
+						//System.out.println(strMoney);
+						if (request_done.booleanValue() == true) {
+							JPanel contentPane = new OperationSuccessfulView();
+							ATMView.instance.setContentPane(contentPane);
+							ATMView.instance.invalidate();
+							ATMView.instance.repaint();
+							ATMView.instance.setLocationRelativeTo(ATMView.instance);
+							ATMView.instance.setVisible(true);
+						}
+						else {
+							//Some problem here, for example file doesn't exist, no need to give an error actually
+						}
+					}
+					else
+					{
+						//number given, but it is < 0
+					}
+				}
+				catch (java.lang.NumberFormatException e)
+				{
+					//not number given
+				}
+
 			}
 		});
 		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));

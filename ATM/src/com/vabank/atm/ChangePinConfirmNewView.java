@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
+import org.json.simple.JSONObject;
+
 @SuppressWarnings("serial")
 public class ChangePinConfirmNewView extends JPanel {
 
@@ -54,12 +56,40 @@ public class ChangePinConfirmNewView extends JPanel {
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel contentPane = new OperationSuccessfulView();
-				ATMView.instance.setContentPane(contentPane);
-				ATMView.instance.invalidate();
-				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(ATMView.instance);
-				ATMView.instance.setVisible(true);
+				//needs to check if new password is same as one inputed previously
+				String snewpin = passwordField.getText();
+				String sinputedpin = ChangePinInputNewView.passwordField.getText();
+				
+				if (snewpin.equals(sinputedpin)) {
+					//ok, they are equal
+					
+					//send request to change pin
+					//send request to update
+					JSONObject jsonObj = null;
+					jsonObj = UrlConnector.getData("pin_change.php?card_num=" + CardInputView.cardNumberField.getText() + "&new_pin=" + snewpin);
+					
+					//if everything's ok
+					Boolean request_done = (Boolean) jsonObj.get("response");
+					if (request_done.booleanValue() == true) {
+						//show successful view
+						JPanel contentPane = new OperationSuccessfulView();
+						ATMView.instance.setContentPane(contentPane);
+						ATMView.instance.invalidate();
+						ATMView.instance.repaint();
+						ATMView.instance.setLocationRelativeTo(ATMView.instance);
+						ATMView.instance.setVisible(true);
+					}
+					else {
+						//should be fine actually :)
+						//might happen if some DB issues are found
+					}
+				}
+				else {
+					//not equal PINs!
+					//give an error
+				}
+				
+
 			}
 		});
 		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));

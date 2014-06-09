@@ -6,8 +6,11 @@ import javax.swing.JButton;
 import java.awt.Font;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
+
+import org.json.simple.JSONObject;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,6 +28,8 @@ public class ChangePinInputCurrentView extends JPanel {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+		
 				JPanel contentPane = new AccountSettingsView();
 				ATMView.instance.setContentPane(contentPane);
 				ATMView.instance.invalidate();
@@ -55,12 +60,35 @@ public class ChangePinInputCurrentView extends JPanel {
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel contentPane = new ChangePinInputNewView();
-				ATMView.instance.setContentPane(contentPane);
-				ATMView.instance.invalidate();
-				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(ATMView.instance);
-				ATMView.instance.setVisible(true);
+				
+				//check if we can login with such card num and pin
+				JSONObject jsonObj = null;
+				jsonObj = UrlConnector.getData("cardnum_login.php?card_num=" + CardInputView.cardNumberField.getText() + "&pin=" + passwordField.getText() );
+				
+				Boolean logged = (Boolean) jsonObj.get("cardnum_login");
+				//System.out.println(id);
+				
+				if (logged.booleanValue() == true) {
+					//ok, good login
+					JPanel contentPane = new ChangePinInputNewView();
+					ATMView.instance.setContentPane(contentPane);
+					ATMView.instance.invalidate();
+					ATMView.instance.repaint();
+					ATMView.instance.setLocationRelativeTo(ATMView.instance);
+					ATMView.instance.setVisible(true);
+				}
+				else {
+					passwordField.setText("");
+					passwordField.requestFocus();
+					
+					//incorrect pin!
+					JOptionPane.showMessageDialog(ATMView.instance,
+						    "Wrong pin number",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
 			}
 		});
 		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));

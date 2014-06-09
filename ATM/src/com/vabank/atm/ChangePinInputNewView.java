@@ -10,9 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
+import org.json.simple.JSONObject;
+
 @SuppressWarnings("serial")
 public class ChangePinInputNewView extends JPanel {
-	private JPasswordField passwordField;
+	public static JPasswordField passwordField;
 	
 	/**
 	 * Create the panel.
@@ -53,12 +55,37 @@ public class ChangePinInputNewView extends JPanel {
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel contentPane = new ChangePinConfirmNewView();
-				ATMView.instance.setContentPane(contentPane);
-				ATMView.instance.invalidate();
-				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(ATMView.instance);
-				ATMView.instance.setVisible(true);
+				
+				String snewpin = passwordField.getText();
+				
+				try 
+				{
+					Integer newpin = Integer.parseInt(snewpin);
+					//fine, we could convert it
+					
+					if (newpin.intValue() >= 0) {
+						if (passwordField.getText().length() == 4) {
+							JPanel contentPane = new ChangePinConfirmNewView();
+							ATMView.instance.setContentPane(contentPane);
+							ATMView.instance.invalidate();
+							ATMView.instance.repaint();
+							ATMView.instance.setLocationRelativeTo(ATMView.instance);
+							ATMView.instance.setVisible(true);	
+						}
+						else {
+							//length of PIN is not 4
+						}
+					}
+					else {
+						//bad number given (-100 for example)
+					}
+				}
+				catch (java.lang.NumberFormatException e)
+				{
+					//not number given
+					//tell the user
+				}
+				
 			}
 		});
 		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));
