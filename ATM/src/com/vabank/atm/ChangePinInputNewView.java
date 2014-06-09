@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
@@ -60,6 +61,7 @@ public class ChangePinInputNewView extends JPanel {
 				
 				try 
 				{
+					// TODO: PIN code shouldn't be an integer! What about PIN 0220? :)
 					Integer newpin = Integer.parseInt(snewpin);
 					//fine, we could convert it
 					
@@ -74,16 +76,27 @@ public class ChangePinInputNewView extends JPanel {
 						}
 						else {
 							//length of PIN is not 4
+							JOptionPane.showMessageDialog(ATMView.instance,
+								    "PIN must have 4 digits",
+								    "Error",
+								    JOptionPane.ERROR_MESSAGE);
 						}
 					}
 					else {
 						//bad number given (-100 for example)
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "PIN code must consist of digits only",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
 					}
 				}
-				catch (java.lang.NumberFormatException e)
-				{
+				catch (java.lang.NumberFormatException e) {
 					//not number given
 					//tell the user
+					JOptionPane.showMessageDialog(ATMView.instance,
+						    "PIN code must consist of digits only",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}

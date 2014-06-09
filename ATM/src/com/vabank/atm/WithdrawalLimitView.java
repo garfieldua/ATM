@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -106,11 +107,19 @@ public class WithdrawalLimitView extends JPanel {
 					else
 					{
 						//number given, but it is < 0
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Number must be positive",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				catch (java.lang.NumberFormatException e)
 				{
 					//not number given
+					JOptionPane.showMessageDialog(ATMView.instance,
+						    "Number must be given",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
