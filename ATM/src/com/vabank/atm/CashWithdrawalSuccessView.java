@@ -59,7 +59,7 @@ public class CashWithdrawalSuccessView extends JPanel {
 		btnMainMenu.setBounds(584, 509, 200, 42);
 		add(btnMainMenu);
 		
-		JLabel label = new JLabel("0 UAH");
+		JLabel label = new JLabel(CashWithdrawalView.toWithdrawAmount + " UAH");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		label.setBounds(0, 215, 784, 63);

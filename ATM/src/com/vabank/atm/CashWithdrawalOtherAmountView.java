@@ -1,5 +1,6 @@
 package com.vabank.atm;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -9,6 +10,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
+
+import org.json.simple.JSONObject;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -42,12 +45,60 @@ public class CashWithdrawalOtherAmountView extends JPanel {
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel contentPane = new CashWithdrawalSuccessView();
-				ATMView.instance.setContentPane(contentPane);
-				ATMView.instance.invalidate();
-				ATMView.instance.repaint();
-				ATMView.instance.setLocationRelativeTo(ATMView.instance);
-				ATMView.instance.setVisible(true);
+				
+				String samount = amountField.getText();
+				
+				try 
+				{
+					Integer amount = Integer.parseInt(samount);
+					
+					if (amount > 0) {
+						if (amount % 50 == 0) {
+							JSONObject jsonObj = null;
+							jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+							String strMoney = (String) jsonObj.get("balance");
+							int moneyAmount = Integer.parseInt(strMoney);
+	
+							if (moneyAmount >= amount) {
+								CashWithdrawalView.toWithdrawAmount = amount;
+								JPanel contentPane = new CashWithdrawalSuccessView();
+								ATMView.instance.setContentPane(contentPane);
+								ATMView.instance.invalidate();
+								ATMView.instance.repaint();
+								ATMView.instance.setLocationRelativeTo(ATMView.instance);
+								ATMView.instance.setVisible(true);
+							}
+							else {
+								JOptionPane.showMessageDialog(ATMView.instance,
+									    "Not enough money on account",
+									    "Error",
+									    JOptionPane.ERROR_MESSAGE);
+							}
+						}
+						else {
+							JOptionPane.showMessageDialog(ATMView.instance,
+								    "Amount is not a multiplie of 50",
+								    "Error",
+								    JOptionPane.ERROR_MESSAGE);
+						}
+					}
+					else
+					{
+						//number given, but it is < 0
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Amount must be positive",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch (java.lang.NumberFormatException e)
+				{
+					//not number given
+					JOptionPane.showMessageDialog(ATMView.instance,
+						    "Number must be given",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnNext.setFont(new Font("Tahoma", Font.PLAIN, 18));
