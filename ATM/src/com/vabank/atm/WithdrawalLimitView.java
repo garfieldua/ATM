@@ -107,6 +107,9 @@ public class WithdrawalLimitView extends JPanel {
 					else
 					{
 						//number given, but it is < 0
+						newLimitField.setText("");
+						newLimitField.requestFocus();
+						
 						JOptionPane.showMessageDialog(ATMView.instance,
 							    "Number must be positive",
 							    "Error",
@@ -116,6 +119,9 @@ public class WithdrawalLimitView extends JPanel {
 				catch (java.lang.NumberFormatException e)
 				{
 					//not number given
+					newLimitField.setText("");
+					newLimitField.requestFocus();
+					
 					JOptionPane.showMessageDialog(ATMView.instance,
 						    "Number must be given",
 						    "Error",

@@ -84,6 +84,16 @@ public class SelectTransactionView extends JPanel {
 		add(btnAccountSettings);
 		
 		JButton btnTransfer = new JButton("Transfer");
+		btnTransfer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel contentPane = new TransferReceiverCardView();
+				ATMView.instance.setContentPane(contentPane);
+				ATMView.instance.invalidate();
+				ATMView.instance.repaint();
+				ATMView.instance.setLocationRelativeTo(ATMView.instance);
+				ATMView.instance.setVisible(true);
+			}
+		});
 		btnTransfer.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnTransfer.setBounds(584, 350, 200, 42);
 		add(btnTransfer);
