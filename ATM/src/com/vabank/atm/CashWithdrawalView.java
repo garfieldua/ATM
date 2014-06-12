@@ -52,29 +52,45 @@ public class CashWithdrawalView extends JPanel {
 		JButton btnUah_2 = new JButton("200 UAH");
 		btnUah_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// getting withdrawal limit
 				JSONObject jsonObj = null;
-				jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
-				String strMoney = (String) jsonObj.get("balance");
-				int moneyAmount = Integer.parseInt(strMoney);
+				jsonObj = UrlConnector
+						.getData("withdrawal_limit.php?card_num="
+								+ CardInputView.cardNumberField.getText());
+				String strMoney = (String) jsonObj.get("withdrawal_limit");
+				int withdrawal_limit = Integer.parseInt(strMoney);
 				
-				if (moneyAmount >= 200){
-					toWithdrawAmount = 200;
-					withdraw();
+				if (200 <= withdrawal_limit) {
+					JSONObject jsonObj2 = null;
+					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+					String strMoney2 = (String) jsonObj2.get("balance");
+					int moneyAmount = Integer.parseInt(strMoney2);
 					
-					JPanel contentPane = new CashWithdrawalSuccessView();
-					ATMView.instance.setContentPane(contentPane);
-					ATMView.instance.invalidate();
-					ATMView.instance.repaint();
-					ATMView.instance.setLocationRelativeTo(ATMView.instance);
-					ATMView.instance.setVisible(true);
+					if (moneyAmount >= 200) {
+						toWithdrawAmount = 200;
+						withdraw();
+						
+						JPanel contentPane = new CashWithdrawalSuccessView();
+						ATMView.instance.setContentPane(contentPane);
+						ATMView.instance.invalidate();
+						ATMView.instance.repaint();
+						ATMView.instance.setLocationRelativeTo(ATMView.instance);
+						ATMView.instance.setVisible(true);
+					}
+					else {
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Not enough money on account",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else {
-					JOptionPane.showMessageDialog(ATMView.instance,
-						    "Not enough money on account",
-						    "Error",
-						    JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									ATMView.instance,
+									"Withdrawal limit is exceeded on this card",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				}
-					
 			}
 		});
 		btnUah_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -84,28 +100,44 @@ public class CashWithdrawalView extends JPanel {
 		JButton btnUah_1 = new JButton("100 UAH");
 		btnUah_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// getting withdrawal limit
 				JSONObject jsonObj = null;
-				jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
-				String strMoney = (String) jsonObj.get("balance");
-				int moneyAmount = Integer.parseInt(strMoney);
+				jsonObj = UrlConnector
+						.getData("withdrawal_limit.php?card_num="
+								+ CardInputView.cardNumberField.getText());
+				String strMoney = (String) jsonObj.get("withdrawal_limit");
+				int withdrawal_limit = Integer.parseInt(strMoney);
 				
-				if (moneyAmount >= 100){
-					toWithdrawAmount = 100;
-					withdraw();
+				if (100 <= withdrawal_limit) {
+					JSONObject jsonObj2 = null;
+					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+					String strMoney2 = (String) jsonObj2.get("balance");
+					int moneyAmount = Integer.parseInt(strMoney2);
 					
-					JPanel contentPane = new CashWithdrawalSuccessView();
-					ATMView.instance.setContentPane(contentPane);
-					ATMView.instance.invalidate();
-					ATMView.instance.repaint();
-					ATMView.instance.setLocationRelativeTo(ATMView.instance);
-					ATMView.instance.setVisible(true);
-					
+					if (moneyAmount >= 100) {
+						toWithdrawAmount = 100;
+						withdraw();
+						
+						JPanel contentPane = new CashWithdrawalSuccessView();
+						ATMView.instance.setContentPane(contentPane);
+						ATMView.instance.invalidate();
+						ATMView.instance.repaint();
+						ATMView.instance.setLocationRelativeTo(ATMView.instance);
+						ATMView.instance.setVisible(true);
+					}
+					else {
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Not enough money on account",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else {
-					JOptionPane.showMessageDialog(ATMView.instance,
-						    "Not enough money on account",
-						    "Error",
-						    JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									ATMView.instance,
+									"Withdrawal limit is exceeded on this card",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -116,27 +148,44 @@ public class CashWithdrawalView extends JPanel {
 		JButton btnUah = new JButton("50 UAH");
 		btnUah.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// getting withdrawal limit
 				JSONObject jsonObj = null;
-				jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
-				String strMoney = (String) jsonObj.get("balance");
-				int moneyAmount = Integer.parseInt(strMoney);
+				jsonObj = UrlConnector
+						.getData("withdrawal_limit.php?card_num="
+								+ CardInputView.cardNumberField.getText());
+				String strMoney = (String) jsonObj.get("withdrawal_limit");
+				int withdrawal_limit = Integer.parseInt(strMoney);
 				
-				if (moneyAmount >= 50){
-					toWithdrawAmount = 50;
-					withdraw();
+				if (50 <= withdrawal_limit) {
+					JSONObject jsonObj2 = null;
+					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+					String strMoney2 = (String) jsonObj2.get("balance");
+					int moneyAmount = Integer.parseInt(strMoney2);
 					
-					JPanel contentPane = new CashWithdrawalSuccessView();
-					ATMView.instance.setContentPane(contentPane);
-					ATMView.instance.invalidate();
-					ATMView.instance.repaint();
-					ATMView.instance.setLocationRelativeTo(ATMView.instance);
-					ATMView.instance.setVisible(true);
+					if (moneyAmount >= 50) {
+						toWithdrawAmount = 50;
+						withdraw();
+						
+						JPanel contentPane = new CashWithdrawalSuccessView();
+						ATMView.instance.setContentPane(contentPane);
+						ATMView.instance.invalidate();
+						ATMView.instance.repaint();
+						ATMView.instance.setLocationRelativeTo(ATMView.instance);
+						ATMView.instance.setVisible(true);
+					}
+					else {
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Not enough money on account",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else {
-					JOptionPane.showMessageDialog(ATMView.instance,
-						    "Not enough money on account",
-						    "Error",
-						    JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									ATMView.instance,
+									"Withdrawal limit is exceeded on this card",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -162,27 +211,44 @@ public class CashWithdrawalView extends JPanel {
 		JButton btnUah_5 = new JButton("2000 UAH");
 		btnUah_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// getting withdrawal limit
 				JSONObject jsonObj = null;
-				jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
-				String strMoney = (String) jsonObj.get("balance");
-				int moneyAmount = Integer.parseInt(strMoney);
+				jsonObj = UrlConnector
+						.getData("withdrawal_limit.php?card_num="
+								+ CardInputView.cardNumberField.getText());
+				String strMoney = (String) jsonObj.get("withdrawal_limit");
+				int withdrawal_limit = Integer.parseInt(strMoney);
 				
-				if (moneyAmount >= 2000){
-					toWithdrawAmount = 2000;
-					withdraw();
+				if (2000 <= withdrawal_limit) {
+					JSONObject jsonObj2 = null;
+					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+					String strMoney2 = (String) jsonObj2.get("balance");
+					int moneyAmount = Integer.parseInt(strMoney2);
 					
-					JPanel contentPane = new CashWithdrawalSuccessView();
-					ATMView.instance.setContentPane(contentPane);
-					ATMView.instance.invalidate();
-					ATMView.instance.repaint();
-					ATMView.instance.setLocationRelativeTo(ATMView.instance);
-					ATMView.instance.setVisible(true);
+					if (moneyAmount >= 2000) {
+						toWithdrawAmount = 2000;
+						withdraw();
+						
+						JPanel contentPane = new CashWithdrawalSuccessView();
+						ATMView.instance.setContentPane(contentPane);
+						ATMView.instance.invalidate();
+						ATMView.instance.repaint();
+						ATMView.instance.setLocationRelativeTo(ATMView.instance);
+						ATMView.instance.setVisible(true);
+					}
+					else {
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Not enough money on account",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else {
-					JOptionPane.showMessageDialog(ATMView.instance,
-						    "Not enough money on account",
-						    "Error",
-						    JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									ATMView.instance,
+									"Withdrawal limit is exceeded on this card",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -193,27 +259,44 @@ public class CashWithdrawalView extends JPanel {
 		JButton btnUah_4 = new JButton("1000 UAH");
 		btnUah_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// getting withdrawal limit
 				JSONObject jsonObj = null;
-				jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
-				String strMoney = (String) jsonObj.get("balance");
-				int moneyAmount = Integer.parseInt(strMoney);
+				jsonObj = UrlConnector
+						.getData("withdrawal_limit.php?card_num="
+								+ CardInputView.cardNumberField.getText());
+				String strMoney = (String) jsonObj.get("withdrawal_limit");
+				int withdrawal_limit = Integer.parseInt(strMoney);
 				
-				if (moneyAmount >= 1000){
-					toWithdrawAmount = 1000;
-					withdraw();
+				if (1000 <= withdrawal_limit) {
+					JSONObject jsonObj2 = null;
+					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+					String strMoney2 = (String) jsonObj2.get("balance");
+					int moneyAmount = Integer.parseInt(strMoney2);
 					
-					JPanel contentPane = new CashWithdrawalSuccessView();
-					ATMView.instance.setContentPane(contentPane);
-					ATMView.instance.invalidate();
-					ATMView.instance.repaint();
-					ATMView.instance.setLocationRelativeTo(ATMView.instance);
-					ATMView.instance.setVisible(true);
+					if (moneyAmount >= 1000) {
+						toWithdrawAmount = 1000;
+						withdraw();
+						
+						JPanel contentPane = new CashWithdrawalSuccessView();
+						ATMView.instance.setContentPane(contentPane);
+						ATMView.instance.invalidate();
+						ATMView.instance.repaint();
+						ATMView.instance.setLocationRelativeTo(ATMView.instance);
+						ATMView.instance.setVisible(true);
+					}
+					else {
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Not enough money on account",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else {
-					JOptionPane.showMessageDialog(ATMView.instance,
-						    "Not enough money on account",
-						    "Error",
-						    JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									ATMView.instance,
+									"Withdrawal limit is exceeded on this card",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -224,27 +307,44 @@ public class CashWithdrawalView extends JPanel {
 		JButton btnUah_3 = new JButton("500 UAH");
 		btnUah_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// getting withdrawal limit
 				JSONObject jsonObj = null;
-				jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
-				String strMoney = (String) jsonObj.get("balance");
-				int moneyAmount = Integer.parseInt(strMoney);
+				jsonObj = UrlConnector
+						.getData("withdrawal_limit.php?card_num="
+								+ CardInputView.cardNumberField.getText());
+				String strMoney = (String) jsonObj.get("withdrawal_limit");
+				int withdrawal_limit = Integer.parseInt(strMoney);
 				
-				if (moneyAmount >= 500){
-					toWithdrawAmount = 500;
-					withdraw();
+				if (500 <= withdrawal_limit) {
+					JSONObject jsonObj2 = null;
+					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
+					String strMoney2 = (String) jsonObj2.get("balance");
+					int moneyAmount = Integer.parseInt(strMoney2);
 					
-					JPanel contentPane = new CashWithdrawalSuccessView();
-					ATMView.instance.setContentPane(contentPane);
-					ATMView.instance.invalidate();
-					ATMView.instance.repaint();
-					ATMView.instance.setLocationRelativeTo(ATMView.instance);
-					ATMView.instance.setVisible(true);
+					if (moneyAmount >= 500) {
+						toWithdrawAmount = 500;
+						withdraw();
+						
+						JPanel contentPane = new CashWithdrawalSuccessView();
+						ATMView.instance.setContentPane(contentPane);
+						ATMView.instance.invalidate();
+						ATMView.instance.repaint();
+						ATMView.instance.setLocationRelativeTo(ATMView.instance);
+						ATMView.instance.setVisible(true);
+					}
+					else {
+						JOptionPane.showMessageDialog(ATMView.instance,
+							    "Not enough money on account",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else {
-					JOptionPane.showMessageDialog(ATMView.instance,
-						    "Not enough money on account",
-						    "Error",
-						    JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									ATMView.instance,
+									"Withdrawal limit is exceeded on this card",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
