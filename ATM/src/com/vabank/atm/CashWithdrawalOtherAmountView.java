@@ -61,6 +61,8 @@ public class CashWithdrawalOtherAmountView extends JPanel {
 	
 							if (moneyAmount >= amount) {
 								CashWithdrawalView.toWithdrawAmount = amount;
+								CashWithdrawalView.withdraw();
+								
 								JPanel contentPane = new CashWithdrawalSuccessView();
 								ATMView.instance.setContentPane(contentPane);
 								ATMView.instance.invalidate();

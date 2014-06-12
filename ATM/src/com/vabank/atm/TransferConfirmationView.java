@@ -71,6 +71,13 @@ public class TransferConfirmationView extends JPanel {
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				//let's transfer out money!
+				String samount = TransferAmountView.toTransferAmount.getText();
+				Integer amount = Integer.parseInt(samount);
+				
+				UrlConnector.getData("transfer.php?from=" + CardInputView.cardNumberField.getText() + "&amount=" + amount + "&to=" + TransferReceiverCardView.toTransferCard.getText());
+				
 				JPanel contentPane = new OperationSuccessfulView();
 				ATMView.instance.setContentPane(contentPane);
 				ATMView.instance.invalidate();

@@ -19,6 +19,12 @@ public class CashWithdrawalView extends JPanel {
 	/**
 	 * Create the panel.
 	 */
+	
+	public static void withdraw() {
+		UrlConnector.getData("withdrawal.php?card_num=" + CardInputView.cardNumberField.getText() + "&amount=" + toWithdrawAmount);
+		
+	}
+	
 	public CashWithdrawalView() {
 		setLayout(null);
 		
@@ -53,6 +59,8 @@ public class CashWithdrawalView extends JPanel {
 				
 				if (moneyAmount >= 200){
 					toWithdrawAmount = 200;
+					withdraw();
+					
 					JPanel contentPane = new CashWithdrawalSuccessView();
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();
@@ -83,12 +91,15 @@ public class CashWithdrawalView extends JPanel {
 				
 				if (moneyAmount >= 100){
 					toWithdrawAmount = 100;
+					withdraw();
+					
 					JPanel contentPane = new CashWithdrawalSuccessView();
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();
 					ATMView.instance.repaint();
 					ATMView.instance.setLocationRelativeTo(ATMView.instance);
 					ATMView.instance.setVisible(true);
+					
 				}
 				else {
 					JOptionPane.showMessageDialog(ATMView.instance,
@@ -112,6 +123,8 @@ public class CashWithdrawalView extends JPanel {
 				
 				if (moneyAmount >= 50){
 					toWithdrawAmount = 50;
+					withdraw();
+					
 					JPanel contentPane = new CashWithdrawalSuccessView();
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();
@@ -156,6 +169,8 @@ public class CashWithdrawalView extends JPanel {
 				
 				if (moneyAmount >= 2000){
 					toWithdrawAmount = 2000;
+					withdraw();
+					
 					JPanel contentPane = new CashWithdrawalSuccessView();
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();
@@ -185,6 +200,8 @@ public class CashWithdrawalView extends JPanel {
 				
 				if (moneyAmount >= 1000){
 					toWithdrawAmount = 1000;
+					withdraw();
+					
 					JPanel contentPane = new CashWithdrawalSuccessView();
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();
@@ -214,6 +231,8 @@ public class CashWithdrawalView extends JPanel {
 				
 				if (moneyAmount >= 500){
 					toWithdrawAmount = 500;
+					withdraw();
+					
 					JPanel contentPane = new CashWithdrawalSuccessView();
 					ATMView.instance.setContentPane(contentPane);
 					ATMView.instance.invalidate();

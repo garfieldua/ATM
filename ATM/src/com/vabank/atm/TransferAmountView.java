@@ -69,7 +69,7 @@ public class TransferAmountView extends JPanel {
 							int moneyAmount = Integer.parseInt(strMoney);
 	
 							if (moneyAmount >= amount) {
-								CashWithdrawalView.toWithdrawAmount = amount;
+								//CashWithdrawalView.toWithdrawAmount = amount;
 								JPanel contentPane = new TransferConfirmationView();
 								ATMView.instance.setContentPane(contentPane);
 								ATMView.instance.invalidate();
