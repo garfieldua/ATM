@@ -16,11 +16,14 @@ public class TestDBConnector {
         java.sql.Statement statement = null; 
         String query = "SELECT * FROM natural_person";
         
-        try {           
+        try {    
+        	/*
             connection = DBConnector.getConnection();
             statement = connection.createStatement();
             rs = statement.executeQuery(query);
-             
+             */
+        	rs = Database.getInstance().execute(query);
+        	
             while (rs.next()) {
                 System.out.println(rs.getString("card_number"));
                 System.out.println(rs.getString("pin"));
