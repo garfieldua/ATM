@@ -1,4 +1,4 @@
-package com.vabank.atm;
+package com.vabank.admin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,7 +1,9 @@
-package com.vabank.atm;
+package com.vabank.admin;
 
 import java.sql.ResultSet;
+
 import org.junit.Test;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -12,17 +14,16 @@ public class TestDBConnector {
 		ResultSet rs = null;
         Connection connection = null;
         java.sql.Statement statement = null; 
-        String query = "SELECT * FROM card_accounts";
+        String query = "SELECT * FROM natural_person";
         
         try {           
             connection = DBConnector.getConnection();
             statement = connection.createStatement();
             rs = statement.executeQuery(query);
              
-            if (rs.next()) {
-                System.out.println(rs.getString("id_account"));
-                System.out.println(rs.getString("pin_code"));
-                System.out.println(rs.getInt("amount"));
+            while (rs.next()) {
+                System.out.println(rs.getString("card_number"));
+                System.out.println(rs.getString("pin"));
                 System.out.println("==================");
             }
         } catch (SQLException e) {
