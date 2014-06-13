@@ -14,6 +14,8 @@ import org.json.simple.JSONObject;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class WithdrawalLimitView extends JPanel {
@@ -36,11 +38,12 @@ public class WithdrawalLimitView extends JPanel {
 		jsonObj = UrlConnector.getData("withdrawal_limit.php?card_num=" + CardInputView.cardNumberField.getText() );
 		
 		String strMoney = (String) jsonObj.get("withdrawal_limit");
-		//System.out.println(strMoney);
+		// adding commas for output
+		Locale locale = new Locale("en", "US");
+		int moneyAmount = Integer.parseInt(strMoney);
+		String srt = NumberFormat.getInstance(locale).format(moneyAmount);
 		
-		int withdrawal_limit = Integer.parseInt(strMoney);
-		
-		JLabel label = new JLabel(withdrawal_limit + " UAH");
+		JLabel label = new JLabel(srt + " UAH");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		label.setBounds(0, 139, 784, 63);

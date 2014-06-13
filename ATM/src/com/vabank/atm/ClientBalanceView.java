@@ -3,6 +3,8 @@ package com.vabank.atm;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,11 +33,14 @@ public class ClientBalanceView extends JPanel {
 		jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 		
 		String strMoney = (String) jsonObj.get("balance");
-		//System.out.println(strMoney);
-		
+
+		// adding commas for output
+		Locale locale = new Locale("en", "US");
 		int moneyAmount = Integer.parseInt(strMoney);
+		String srt = NumberFormat.getInstance(locale).format(moneyAmount);
+		
 		JLabel lblMoneyAmount = new JLabel("");
-		lblMoneyAmount.setText(moneyAmount + " UAH");
+		lblMoneyAmount.setText(srt + " UAH");
 		lblMoneyAmount.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMoneyAmount.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		lblMoneyAmount.setBounds(0, 215, 784, 63);

@@ -10,6 +10,8 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class TransferConfirmationView extends JPanel {
@@ -47,7 +49,12 @@ public class TransferConfirmationView extends JPanel {
 		lblTransferAmount.setBounds(0, 281, 784, 42);
 		add(lblTransferAmount);
 		
-		JLabel lblToTransferAmount = new JLabel(TransferAmountView.toTransferAmount.getText());
+		// adding commas for output
+		Locale locale = new Locale("en", "US");
+		int moneyAmount = Integer.parseInt(TransferAmountView.toTransferAmount.getText());
+		String srt = NumberFormat.getInstance(locale).format(moneyAmount);
+		
+		JLabel lblToTransferAmount = new JLabel(srt);
 		lblToTransferAmount.setHorizontalAlignment(SwingConstants.CENTER);
 		lblToTransferAmount.setFont(new Font("Tahoma", Font.PLAIN, 26));
 		lblToTransferAmount.setBounds(0, 323, 784, 42);

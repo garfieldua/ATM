@@ -10,6 +10,8 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class CashWithdrawalSuccessView extends JPanel {
@@ -59,7 +61,11 @@ public class CashWithdrawalSuccessView extends JPanel {
 		btnMainMenu.setBounds(584, 509, 200, 42);
 		add(btnMainMenu);
 		
-		JLabel label = new JLabel(CashWithdrawalView.toWithdrawAmount + " UAH");
+		// adding commas for output
+		Locale locale = new Locale("en", "US");
+		String srt = NumberFormat.getInstance(locale).format(CashWithdrawalView.toWithdrawAmount);
+		
+		JLabel label = new JLabel(srt + " UAH");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		label.setBounds(0, 215, 784, 63);
