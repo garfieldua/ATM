@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import com.toedter.calendar.JDateChooser;
 import com.vabank.atm.ATMView;
 import com.vabank.atm.JTextFieldLimit;
 import com.vabank.atm.UITemplates;
@@ -19,8 +20,11 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 @SuppressWarnings("serial")
@@ -33,16 +37,17 @@ public class LegalPersonView extends JPanel {
 	// selected natural persons
 	private JTable table3;
 	
-	private JTextField boxName;
-	private JTextField boxPhone;
-	private JTextField boxAddress;
-	private JTextField boxIdent;
-	private JTextField boxPin;
-	private JTextField boxCardNumber;
-	private JTextField boxBalance;
-	private JTextField boxWithdraw;
+	private TreeSet<Employee> workerIds = new TreeSet<Employee>();
 	
-	private TreeSet<String> workerIds = new TreeSet<String>();
+	private JTextField boxFullName;
+	private JTextField boxShortName;
+	private JTextField boxIdentCode;
+	private JTextField boxFunds;
+	private JTextField boxCertNum;
+	private JTextField boxRegAuth;
+	private JTextField boxAddress;
+	private JTextField boxSalary;
+	
 	/**
 	 * Create the panel.
 	 * @throws SQLException 
@@ -50,7 +55,7 @@ public class LegalPersonView extends JPanel {
 	public LegalPersonView() throws SQLException {
 		setLayout(null);
 		
-		MainView.instance.setSize(1300, 800);
+		//MainView.instance.setSize(1300, 800);
 		
 		add(UITemplates.atmLogo);
 		add(UITemplates.atmTime);
@@ -68,18 +73,24 @@ public class LegalPersonView extends JPanel {
 			}
 		});
 		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnExit.setBounds(594, 718, 200, 42);
+		btnExit.setBounds(585, 523, 200, 42);
 		add(btnExit);
 		
 		// model for current workers
 		final ListTableModel[] model21 = { null };
 		
+		final JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(605, 306, 158, 20);
+		add(dateChooser);
+		
+		dateChooser.setDateFormatString("yyyy-MM-dd");
+		
 		// Filling legal person table
 		ResultSet resultSet = Database.getInstance().execute(
-				"SELECT short_name AS ShortName"
+				"SELECT full_name as FullName"
 						+ ", ident_code AS IdentCode"
 						+ ", funds AS Funds"
-						+ ", country AS Country"
+						+ ", address AS Address"
 						+ ", num_cert_of_reg AS CertificateNumber"
 						+ " FROM legal_person"
 						+ " ORDER BY ident_code");
@@ -91,14 +102,13 @@ public class LegalPersonView extends JPanel {
 
 
 		JScrollPane jp = new JScrollPane(table);
-		jp.setBounds(10, 60, 1280, 160);
+		jp.setBounds(10, 60, 775, 145);
 		add(jp);
 
 		// Filling all natural person table
 		ResultSet resultSet2 = Database.getInstance().execute(
 				"SELECT name AS Name"
 						+ ", card_number AS CardNumber"
-						+ ", phone_number AS PhoneNumber"
 						+ ", ident_code AS IdentCode"
 						+ " FROM natural_person"
 						+ " ORDER BY name");
@@ -109,14 +119,13 @@ public class LegalPersonView extends JPanel {
 		table2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane jp2 = new JScrollPane(table2);
-		jp2.setBounds(10, 466, 597, 160);
+		jp2.setBounds(10, 367, 346, 145);
 		add(jp2);
 
 		// Filling "selected" natural person table. By now in should be empty though
 		ResultSet resultSet3 = Database.getInstance().execute(
 				"SELECT name AS Name"
 						+ ", card_number AS CardNumber"
-						+ ", phone_number AS PhoneNumber"
 						+ ", ident_code AS IdentCode"
 						+ " FROM natural_person"
 						+ " WHERE ident_code <> ident_code"
@@ -128,7 +137,7 @@ public class LegalPersonView extends JPanel {
 		table3.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JScrollPane jp3 = new JScrollPane(table3);
-		jp3.setBounds(693, 466, 597, 160);
+		jp3.setBounds(439, 367, 346, 145);
 		add(jp3);
 		
 		// Processing clicking on a legal person
@@ -144,7 +153,7 @@ public class LegalPersonView extends JPanel {
 													+ ", full_name AS FullName"
 													+ ", ident_code AS IdentCode"
 													+ ", funds AS Funds"
-													+ ", country AS Country"
+													+ ", address AS Address"
 													+ ", num_cert_of_reg AS CertificateNumber"
 													+ ", reg_cert_authority AS RegAuth"
 													+ ", date_cert AS DateReg"
@@ -164,7 +173,29 @@ public class LegalPersonView extends JPanel {
 							//
 
 							try {
+								String shortname = resultSet2.getString(1);
+								boxShortName.setText(shortname);
+								
+								String fullname = resultSet2.getString(2);
+								boxFullName.setText(fullname);
+								
 								String idcode = resultSet2.getString(3);
+								boxIdentCode.setText(idcode);
+								
+								String funds = resultSet2.getString(4);
+								boxFunds.setText(funds);
+								
+								String address = resultSet2.getString(5);
+								boxAddress.setText(address);
+								
+								String num_cert_of_reg = resultSet2.getString(6);
+								boxCertNum.setText(num_cert_of_reg);
+								
+								String reg_cert_authority = resultSet2.getString(7);
+								boxRegAuth.setText(reg_cert_authority);
+								
+								Date date = resultSet2.getDate(8);
+								dateChooser.setDate(date);
 								
 								//System.out.println(idcode);
 								
@@ -174,9 +205,7 @@ public class LegalPersonView extends JPanel {
 										.execute(
 												"SELECT name AS Name"
 														+ ", natural_person.card_number AS CardNumber"
-														+ ", phone_number AS PhoneNumber"
 														+ ", natural_person.ident_code AS IdentCode"
-														+ ", balance AS Balance"
 														+ " FROM natural_person INNER JOIN employees ON natural_person.card_number = employees.card_number"
 														+ " WHERE employees.ident_code = '" + idcode + "'"
 														+ " ORDER BY name");
@@ -193,41 +222,17 @@ public class LegalPersonView extends JPanel {
 														+ ", phone_number AS PhoneNumber"
 														+ ", natural_person.ident_code AS IdentCode"
 														+ ", balance AS Balance"
+														+ ", salary AS Salary"
 														+ " FROM natural_person INNER JOIN employees ON natural_person.card_number = employees.card_number"
 														+ " WHERE employees.ident_code = '" + idcode + "'"
 														+ " ORDER BY name");
 								workerIds.clear();
 
 								while (resultSet4.next()) {
-									workerIds.add(resultSet4.getString(2));
+									Employee temp = new Employee(resultSet4.getInt(6), resultSet4.getString(2));
+									workerIds.add(temp);
 								}
-								
 								System.out.println(workerIds);
-								/*
-								String name = resultSet2.getString(1);
-								boxName.setText(name);
-								
-								String card_number = resultSet2.getString(2);
-								boxCardNumber.setText(card_number);
-
-								String phone_number = resultSet2.getString(3);
-								boxPhone.setText(phone_number);
-								
-								String ident_code = resultSet2.getString(4);
-								boxIdent.setText(ident_code);
-								
-								String balance = resultSet2.getString(5);
-								boxBalance.setText(balance);
-								
-								String pin = resultSet2.getString(6);
-								boxPin.setText(pin);
-								
-								String address = resultSet2.getString(7);
-								boxAddress.setText(address);
-								
-								String withdrawal_limit = resultSet2.getString(8);
-								boxWithdraw.setText(withdrawal_limit);
-								*/
 								
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
@@ -308,17 +313,17 @@ public class LegalPersonView extends JPanel {
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int reply = JOptionPane.showConfirmDialog(MainView.instance, "Do you really want to delete selected natural person?", "Confirm your action", JOptionPane.YES_NO_OPTION);
+				int reply = JOptionPane.showConfirmDialog(MainView.instance, "Do you really want to delete selected legal person?", "Confirm your action", JOptionPane.YES_NO_OPTION);
 				if (reply == JOptionPane.YES_OPTION) {
 					if (table.getSelectedRow() >= 0) {
 						ResultSet resultSet2 = Database.getInstance().execute(
-								"SELECT name AS Name"
-										+ ", card_number AS CardNumber"
-										+ ", phone_number AS PhoneNumber"
+								"SELECT full_name as FullName"
 										+ ", ident_code AS IdentCode"
-										+ ", balance AS Balance"
-										+ " FROM natural_person"
-										+ " ORDER BY name");
+										+ ", funds AS Funds"
+										+ ", address AS Address"
+										+ ", num_cert_of_reg AS CertificateNumber"
+										+ " FROM legal_person"
+										+ " ORDER BY ident_code");
 	
 						for (int i = 0; i < table.getSelectedRow() + 1; i++) {
 							try {
@@ -334,23 +339,21 @@ public class LegalPersonView extends JPanel {
 							String code = resultSet2.getString(2);
 	
 							// statemenet needed
-	
-	
 							ResultSet resultSet3 = Database.getInstance().execute(
-										"DELETE" + " FROM natural_person"
-												+ " WHERE card_number = '"
+										"DELETE" + " FROM legal_person"
+												+ " WHERE ident_code = '"
 												+ code + "'");
 	
 							ResultSet resultSet4 = Database
 									.getInstance()
 									.execute(
-											"SELECT name AS Name"
-													+ ", card_number AS CardNumber"
-													+ ", phone_number AS PhoneNumber"
+											"SELECT full_name as FullName"
 													+ ", ident_code AS IdentCode"
-													+ ", balance AS Balance"
-													+ " FROM natural_person"
-													+ " ORDER BY name");
+													+ ", funds AS Funds"
+													+ ", address AS Address"
+													+ ", num_cert_of_reg AS CertificateNumber"
+													+ " FROM legal_person"
+													+ " ORDER BY ident_code");
 	
 							ListTableModel model2 = ListTableModel
 									.createModelFromResultSet(resultSet4);
@@ -367,7 +370,7 @@ public class LegalPersonView extends JPanel {
 				}
 			}
 		});
-		btnDelete.setBounds(655, 771, 89, 23);
+		btnDelete.setBounds(696, 218, 89, 23);
 		add(btnDelete);
 
 		JButton btnNewButton = new JButton("Update");
@@ -500,7 +503,7 @@ public class LegalPersonView extends JPanel {
 				}
 			}
 		});
-		btnNewButton.setBounds(109, 984, 89, 23);
+		btnNewButton.setBounds(109, 523, 89, 23);
 		add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Create");
@@ -602,124 +605,230 @@ public class LegalPersonView extends JPanel {
 
 			}
 		});
-		btnNewButton_1.setBounds(10, 984, 89, 23);
+		btnNewButton_1.setBounds(10, 523, 89, 23);
 		add(btnNewButton_1);
+		
+		JButton btnClearFields = new JButton("Clear fields");
+		btnClearFields.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				boxFullName.setText("");
+				boxShortName.setText("");
+				boxIdentCode.setText("");
+				boxFunds.setText("");
+				boxCertNum.setText("");
+				boxRegAuth.setText("");
+				boxAddress.setText("");
+			}
+		});
+		btnClearFields.setBounds(10, 216, 124, 23);
+		add(btnClearFields);
+		
+		// Hiring natural persons
+		JButton btnHire = new JButton("Hire");
+		btnHire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (table2.getSelectedRow() >= 0) {
+					ResultSet resultSet20 = Database
+							.getInstance()
+							.execute(
+									"SELECT name AS Name"
+											+ ", card_number AS CardNumber"
+											+ ", ident_code AS IdentCode"
+											+ " FROM natural_person"
+											+ " ORDER BY name");
 
-		boxName = new JTextField();
-		boxName.setBounds(10, 808, 188, 20);
-		add(boxName);
-		boxName.setColumns(10);
-		boxName.setDocument(new JTextFieldLimit(255));
+					for (int i = 0; i < table2.getSelectedRow() + 1; i++) {
+						try {
+							resultSet20.next();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
 
-		JLabel lblName = new JLabel("Name");
-		lblName.setLabelFor(boxName);
-		lblName.setBounds(10, 790, 89, 14);
-		add(lblName);
+					try {
+						Employee temp = new Employee(Integer.parseInt(boxSalary.getText()), resultSet20.getString(2));
+						workerIds.add(temp);
 
-		JLabel lblPhone = new JLabel("Phone number");
-		lblPhone.setBounds(10, 839, 158, 14);
-		add(lblPhone);
+						ResultSet resultSet21 = Database
+								.getInstance()
+								.execute(
+										"SELECT name AS Name"
+												+ ", card_number AS CardNumber"
+												+ ", ident_code AS IdentCode"
+												+ " FROM natural_person"
+												+ " ORDER BY name");
 
-		boxPhone = new JTextField();
-		boxPhone.setColumns(10);
-		boxPhone.setBounds(10, 859, 188, 20);
-		add(boxPhone);
-		boxPhone.setDocument(new JTextFieldLimit(20));
+						model21[0] = ListTableModel
+								.createModelFromResultSet(resultSet21);
 
+						ResultSet resultSet22 = Database
+								.getInstance()
+								.execute(
+										"SELECT name AS Name"
+												+ ", card_number AS CardNumber"
+												+ ", ident_code AS IdentCode"
+												+ " FROM natural_person"
+												+ " ORDER BY name");
+
+						int curpos = 0;
+
+						while (resultSet22.next()) {
+							Employee temp2 = new Employee(Integer.parseInt(boxSalary.getText()), resultSet20.getString(2));
+							if (!workerIds.contains(temp2)) {
+								model21[0].removeRowRange(curpos, curpos);
+								curpos--;
+							}
+							curpos++;
+						}
+
+						table3.setModel(model21[0]);
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			}
+		});
+		btnHire.setBounds(366, 452, 63, 23);
+		add(btnHire);
+		
+		JButton btnFire = new JButton("Fire");
+		btnFire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (table3.getSelectedRow() >= 0) {
+					int selectedrow = table3.getSelectedRow();
+
+					Iterator<Employee> it = workerIds.iterator();
+					int i = 0;
+					Employee current = null;
+					while (it.hasNext() && i <= selectedrow) {
+						current = it.next();
+						i++;
+					}
+
+					workerIds.remove(current);
+
+					try {
+						ResultSet resultSet21 = Database
+								.getInstance()
+								.execute(
+										"SELECT name AS Name"
+												+ ", card_number AS CardNumber"
+												+ ", ident_code AS IdentCode"
+												+ " FROM natural_person"
+												+ " ORDER BY name");
+
+						model21[0] = ListTableModel
+								.createModelFromResultSet(resultSet21);
+
+						ResultSet resultSet22 = Database
+								.getInstance()
+								.execute(
+										"SELECT name AS Name"
+												+ ", card_number AS CardNumber"
+												+ ", ident_code AS IdentCode"
+												+ " FROM natural_person"
+												+ " ORDER BY name");
+
+						int curpos = 0;
+						while (resultSet22.next()) {
+							Employee temp = new Employee(0, resultSet22.getString(2));
+							if (!workerIds.contains(temp)) {
+								model21[0].removeRowRange(curpos, curpos);
+								curpos--;
+							}
+							curpos++;
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					table3.setModel(model21[0]);
+					System.out.println("============================");
+					System.out.println(workerIds);
+				}
+			}
+		});
+		btnFire.setBounds(439, 523, 57, 23);
+		add(btnFire);
+		
+		JLabel lblFullName = new JLabel("Full name");
+		lblFullName.setBounds(10, 247, 124, 14);
+		add(lblFullName);
+		
+		boxFullName = new JTextField();
+		boxFullName.setBounds(10, 261, 158, 20);
+		add(boxFullName);
+		boxFullName.setColumns(10);
+		
+		JLabel lblShortName = new JLabel("Short name");
+		lblShortName.setBounds(10, 292, 124, 14);
+		add(lblShortName);
+		
+		boxShortName = new JTextField();
+		boxShortName.setColumns(10);
+		boxShortName.setBounds(10, 306, 158, 20);
+		add(boxShortName);
+		
+		JLabel lblIdentCode = new JLabel("Ident code");
+		lblIdentCode.setBounds(207, 247, 124, 14);
+		add(lblIdentCode);
+		
+		boxIdentCode = new JTextField();
+		boxIdentCode.setColumns(10);
+		boxIdentCode.setBounds(207, 261, 158, 20);
+		add(boxIdentCode);
+		
+		JLabel lblFunds = new JLabel("Funds");
+		lblFunds.setBounds(207, 292, 124, 14);
+		add(lblFunds);
+		
+		boxFunds = new JTextField();
+		boxFunds.setColumns(10);
+		boxFunds.setBounds(207, 306, 158, 20);
+		add(boxFunds);
+		
+		JLabel lblCertificate = new JLabel("Certificate \u2116");
+		lblCertificate.setBounds(404, 247, 124, 14);
+		add(lblCertificate);
+		
+		boxCertNum = new JTextField();
+		boxCertNum.setColumns(10);
+		boxCertNum.setBounds(404, 261, 158, 20);
+		add(boxCertNum);
+		
+		JLabel lblRegistrationAuthority = new JLabel("Registration authority");
+		lblRegistrationAuthority.setBounds(404, 292, 158, 14);
+		add(lblRegistrationAuthority);
+		
+		boxRegAuth = new JTextField();
+		boxRegAuth.setColumns(10);
+		boxRegAuth.setBounds(404, 306, 158, 20);
+		add(boxRegAuth);
+		
 		JLabel lblAddress = new JLabel("Address");
-		lblAddress.setBounds(10, 890, 89, 14);
+		lblAddress.setBounds(605, 247, 124, 14);
 		add(lblAddress);
-
+		
 		boxAddress = new JTextField();
 		boxAddress.setColumns(10);
-		boxAddress.setBounds(10, 908, 188, 20);
+		boxAddress.setBounds(605, 261, 158, 20);
 		add(boxAddress);
-		boxAddress.setDocument(new JTextFieldLimit(255));
-
-		boxIdent = new JTextField();
-		boxIdent.setColumns(10);
-		boxIdent.setBounds(10, 953, 188, 20);
-		add(boxIdent);
-		boxIdent.setDocument(new JTextFieldLimit(10));
-
-		JButton btnClearInfo = new JButton("Clear fields");
-		btnClearInfo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boxName.setText("");
-				boxPhone.setText("");
-				boxAddress.setText("");
-				boxIdent.setText("");
-				boxPin.setText("");
-				boxWithdraw.setText("");
-				boxBalance.setText("");
-				boxCardNumber.setText("");
-			}
-		});
-		btnClearInfo.setBounds(10, 756, 124, 23);
-		add(btnClearInfo);
-
-		JLabel lblCardNumber = new JLabel("Card number");
-		lblCardNumber.setBounds(243, 790, 144, 14);
-		add(lblCardNumber);
-
-		JLabel lblPin = new JLabel("PIN");
-		lblPin.setBounds(243, 839, 115, 14);
-		add(lblPin);
-
-		boxPin = new JTextField();
-		boxPin.setColumns(10);
-		boxPin.setBounds(243, 859, 188, 20);
-		add(boxPin);
-		boxPin.setDocument(new JTextFieldLimit(4));
-
-		JLabel lblIdent = new JLabel("Ident code");
-		lblIdent.setBounds(10, 935, 134, 14);
-		add(lblIdent);
 		
-		JLabel lblStartBalance = new JLabel("Balance");
-		lblStartBalance.setBounds(243, 890, 115, 14);
-		add(lblStartBalance);
+		JLabel lblDateOfRegistration = new JLabel("Date of registration");
+		lblDateOfRegistration.setBounds(605, 292, 124, 14);
+		add(lblDateOfRegistration);
 		
-		boxCardNumber = new JTextField();
-		boxCardNumber.setColumns(10);
-		boxCardNumber.setBounds(243, 808, 188, 20);
-		boxCardNumber.setDocument(new JTextFieldLimit(16));
-		add(boxCardNumber);
+		JLabel lblSalary = new JLabel("Salary");
+		lblSalary.setBounds(366, 397, 63, 14);
+		add(lblSalary);
 		
-		boxBalance = new JTextField();
-		boxBalance.setColumns(10);
-		boxBalance.setBounds(243, 908, 188, 20);
-		boxBalance.setDocument(new JTextFieldLimit(255));
-		add(boxBalance);
-		
-		JLabel lblWithdraw = new JLabel("Withdrawal limit");
-		lblWithdraw.setBounds(243, 935, 115, 14);
-		add(lblWithdraw);
-		
-		boxWithdraw = new JTextField();
-		boxWithdraw.setColumns(10);
-		boxWithdraw.setBounds(243, 953, 188, 20);
-		boxWithdraw.setDocument(new JTextFieldLimit(255));
-		add(boxWithdraw);
-		
-		JButton button = new JButton("Clear fields");
-		button.setBounds(10, 402, 124, 23);
-		add(button);
-		
-		JButton button_1 = new JButton("Clear fields");
-		button_1.setBounds(144, 402, 124, 23);
-		add(button_1);
-		
-		JButton button_2 = new JButton("->");
-		button_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		button_2.setBounds(617, 508, 57, 23);
-		add(button_2);
-		
-		JButton button_3 = new JButton("<-");
-		button_3.setBounds(617, 577, 57, 23);
-		add(button_3);
+		boxSalary = new JTextField();
+		boxSalary.setColumns(10);
+		boxSalary.setBounds(366, 421, 63, 20);
+		add(boxSalary);
 	}
 }
