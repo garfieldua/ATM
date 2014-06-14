@@ -17,18 +17,11 @@ public class Employee implements Comparable<Employee> {
 
 	@Override
 	public int compareTo(Employee arg0) {
-		String comparator = arg0.cardNumber;
-		return cardNumber.compareTo(comparator);
+		return this.cardNumber.compareTo(arg0.cardNumber);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Employee))
-			return false;
-		if (obj == this)
-			return true;
-
-		Employee rhs = (Employee) obj;
-		return cardNumber.equals(rhs.cardNumber);
+		return obj instanceof Employee && (this.compareTo((Employee) obj) == 0);
 	}
 }
