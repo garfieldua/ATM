@@ -21,11 +21,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.TreeSet;
 
 @SuppressWarnings("serial")
 public class LegalPersonView extends JPanel {
 
+	// all legal persons
 	private JTable table;
+	// all natural persons
+	private JTable table2;
+	// selected natural persons
+	private JTable table3;
+	
 	private JTextField boxName;
 	private JTextField boxPhone;
 	private JTextField boxAddress;
@@ -35,6 +42,7 @@ public class LegalPersonView extends JPanel {
 	private JTextField boxBalance;
 	private JTextField boxWithdraw;
 	
+	private TreeSet<String> workerIds = new TreeSet<String>();
 	/**
 	 * Create the panel.
 	 * @throws SQLException 
@@ -42,12 +50,15 @@ public class LegalPersonView extends JPanel {
 	public LegalPersonView() throws SQLException {
 		setLayout(null);
 		
+		MainView.instance.setSize(1300, 800);
+		
 		add(UITemplates.atmLogo);
 		add(UITemplates.atmTime);
 		
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				MainView.instance.setSize(800, 600);
 				JPanel contentPane = new AdminMenuView();
 				MainView.instance.setContentPane(contentPane);
 				MainView.instance.invalidate();
@@ -57,17 +68,21 @@ public class LegalPersonView extends JPanel {
 			}
 		});
 		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnExit.setBounds(584, 519, 200, 42);
+		btnExit.setBounds(594, 718, 200, 42);
 		add(btnExit);
 		
+		// model for current workers
+		final ListTableModel[] model21 = { null };
+		
+		// Filling legal person table
 		ResultSet resultSet = Database.getInstance().execute(
-				"SELECT name AS Name"
-						+ ", card_number AS CardNumber"
-						+ ", phone_number AS PhoneNumber"
+				"SELECT short_name AS ShortName"
 						+ ", ident_code AS IdentCode"
-						+ ", balance AS Balance"
-						+ " FROM natural_person"
-						+ " ORDER BY name");
+						+ ", funds AS Funds"
+						+ ", country AS Country"
+						+ ", num_cert_of_reg AS CertificateNumber"
+						+ " FROM legal_person"
+						+ " ORDER BY ident_code");
 				
 		ListTableModel model = ListTableModel
 				.createModelFromResultSet(resultSet);
@@ -76,11 +91,154 @@ public class LegalPersonView extends JPanel {
 
 
 		JScrollPane jp = new JScrollPane(table);
-		jp.setBounds(10, 60, 774, 220);
+		jp.setBounds(10, 60, 1280, 160);
 		add(jp);
 
+		// Filling all natural person table
+		ResultSet resultSet2 = Database.getInstance().execute(
+				"SELECT name AS Name"
+						+ ", card_number AS CardNumber"
+						+ ", phone_number AS PhoneNumber"
+						+ ", ident_code AS IdentCode"
+						+ " FROM natural_person"
+						+ " ORDER BY name");
+				
+		ListTableModel model2 = ListTableModel
+				.createModelFromResultSet(resultSet2);
+		table2 = new JTable(model2);
+		table2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		JScrollPane jp2 = new JScrollPane(table2);
+		jp2.setBounds(10, 466, 597, 160);
+		add(jp2);
+
+		// Filling "selected" natural person table. By now in should be empty though
+		ResultSet resultSet3 = Database.getInstance().execute(
+				"SELECT name AS Name"
+						+ ", card_number AS CardNumber"
+						+ ", phone_number AS PhoneNumber"
+						+ ", ident_code AS IdentCode"
+						+ " FROM natural_person"
+						+ " WHERE ident_code <> ident_code"
+						+ " ORDER BY name");
+				
+		ListTableModel model3 = ListTableModel
+				.createModelFromResultSet(resultSet3);
+		table3 = new JTable(model3);
+		table3.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		//
+		JScrollPane jp3 = new JScrollPane(table3);
+		jp3.setBounds(693, 466, 597, 160);
+		add(jp3);
+		
+		// Processing clicking on a legal person
+		table.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+						if (table.getSelectedRow() >= 0) {
+							ResultSet resultSet2 = Database
+									.getInstance()
+									.execute(
+											"SELECT short_name AS ShortName"
+													+ ", full_name AS FullName"
+													+ ", ident_code AS IdentCode"
+													+ ", funds AS Funds"
+													+ ", country AS Country"
+													+ ", num_cert_of_reg AS CertificateNumber"
+													+ ", reg_cert_authority AS RegAuth"
+													+ ", date_cert AS DateReg"
+													+ " FROM legal_person"
+													+ " ORDER BY ident_code");
+											
+
+							for (int i = 0; i < table.getSelectedRow() + 1; i++) {
+								try {
+									resultSet2.next();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+
+							//
+
+							try {
+								String idcode = resultSet2.getString(3);
+								
+								//System.out.println(idcode);
+								
+								// now, filling table3 with natural persons that are working with on-clicked legal person
+								ResultSet resultSet3 = Database
+										.getInstance()
+										.execute(
+												"SELECT name AS Name"
+														+ ", natural_person.card_number AS CardNumber"
+														+ ", phone_number AS PhoneNumber"
+														+ ", natural_person.ident_code AS IdentCode"
+														+ ", balance AS Balance"
+														+ " FROM natural_person INNER JOIN employees ON natural_person.card_number = employees.card_number"
+														+ " WHERE employees.ident_code = '" + idcode + "'"
+														+ " ORDER BY name");
+								
+								model21[0] = ListTableModel.createModelFromResultSet(resultSet3);
+								table3.setModel(model21[0]);
+								
+								// filling
+								ResultSet resultSet4 = Database
+										.getInstance()
+										.execute(
+												"SELECT name AS Name"
+														+ ", natural_person.card_number AS CardNumber"
+														+ ", phone_number AS PhoneNumber"
+														+ ", natural_person.ident_code AS IdentCode"
+														+ ", balance AS Balance"
+														+ " FROM natural_person INNER JOIN employees ON natural_person.card_number = employees.card_number"
+														+ " WHERE employees.ident_code = '" + idcode + "'"
+														+ " ORDER BY name");
+								workerIds.clear();
+
+								while (resultSet4.next()) {
+									workerIds.add(resultSet4.getString(2));
+								}
+								
+								System.out.println(workerIds);
+								/*
+								String name = resultSet2.getString(1);
+								boxName.setText(name);
+								
+								String card_number = resultSet2.getString(2);
+								boxCardNumber.setText(card_number);
+
+								String phone_number = resultSet2.getString(3);
+								boxPhone.setText(phone_number);
+								
+								String ident_code = resultSet2.getString(4);
+								boxIdent.setText(ident_code);
+								
+								String balance = resultSet2.getString(5);
+								boxBalance.setText(balance);
+								
+								String pin = resultSet2.getString(6);
+								boxPin.setText(pin);
+								
+								String address = resultSet2.getString(7);
+								boxAddress.setText(address);
+								
+								String withdrawal_limit = resultSet2.getString(8);
+								boxWithdraw.setText(withdrawal_limit);
+								*/
+								
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
+						}
+					}
+				});
+		
+		/*
 		table.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -145,7 +303,7 @@ public class LegalPersonView extends JPanel {
 						}
 					}
 				});
-
+*/
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -209,7 +367,7 @@ public class LegalPersonView extends JPanel {
 				}
 			}
 		});
-		btnDelete.setBounds(695, 291, 89, 23);
+		btnDelete.setBounds(655, 771, 89, 23);
 		add(btnDelete);
 
 		JButton btnNewButton = new JButton("Update");
@@ -342,7 +500,7 @@ public class LegalPersonView extends JPanel {
 				}
 			}
 		});
-		btnNewButton.setBounds(109, 519, 89, 23);
+		btnNewButton.setBounds(109, 984, 89, 23);
 		add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Create");
@@ -444,43 +602,43 @@ public class LegalPersonView extends JPanel {
 
 			}
 		});
-		btnNewButton_1.setBounds(10, 519, 89, 23);
+		btnNewButton_1.setBounds(10, 984, 89, 23);
 		add(btnNewButton_1);
 
 		boxName = new JTextField();
-		boxName.setBounds(10, 343, 188, 20);
+		boxName.setBounds(10, 808, 188, 20);
 		add(boxName);
 		boxName.setColumns(10);
 		boxName.setDocument(new JTextFieldLimit(255));
 
 		JLabel lblName = new JLabel("Name");
 		lblName.setLabelFor(boxName);
-		lblName.setBounds(10, 325, 89, 14);
+		lblName.setBounds(10, 790, 89, 14);
 		add(lblName);
 
 		JLabel lblPhone = new JLabel("Phone number");
-		lblPhone.setBounds(10, 374, 158, 14);
+		lblPhone.setBounds(10, 839, 158, 14);
 		add(lblPhone);
 
 		boxPhone = new JTextField();
 		boxPhone.setColumns(10);
-		boxPhone.setBounds(10, 394, 188, 20);
+		boxPhone.setBounds(10, 859, 188, 20);
 		add(boxPhone);
 		boxPhone.setDocument(new JTextFieldLimit(20));
 
 		JLabel lblAddress = new JLabel("Address");
-		lblAddress.setBounds(10, 425, 89, 14);
+		lblAddress.setBounds(10, 890, 89, 14);
 		add(lblAddress);
 
 		boxAddress = new JTextField();
 		boxAddress.setColumns(10);
-		boxAddress.setBounds(10, 443, 188, 20);
+		boxAddress.setBounds(10, 908, 188, 20);
 		add(boxAddress);
 		boxAddress.setDocument(new JTextFieldLimit(255));
 
 		boxIdent = new JTextField();
 		boxIdent.setColumns(10);
-		boxIdent.setBounds(10, 488, 188, 20);
+		boxIdent.setBounds(10, 953, 188, 20);
 		add(boxIdent);
 		boxIdent.setDocument(new JTextFieldLimit(10));
 
@@ -497,52 +655,71 @@ public class LegalPersonView extends JPanel {
 				boxCardNumber.setText("");
 			}
 		});
-		btnClearInfo.setBounds(10, 291, 124, 23);
+		btnClearInfo.setBounds(10, 756, 124, 23);
 		add(btnClearInfo);
 
 		JLabel lblCardNumber = new JLabel("Card number");
-		lblCardNumber.setBounds(243, 325, 144, 14);
+		lblCardNumber.setBounds(243, 790, 144, 14);
 		add(lblCardNumber);
 
 		JLabel lblPin = new JLabel("PIN");
-		lblPin.setBounds(243, 374, 115, 14);
+		lblPin.setBounds(243, 839, 115, 14);
 		add(lblPin);
 
 		boxPin = new JTextField();
 		boxPin.setColumns(10);
-		boxPin.setBounds(243, 394, 188, 20);
+		boxPin.setBounds(243, 859, 188, 20);
 		add(boxPin);
 		boxPin.setDocument(new JTextFieldLimit(4));
 
 		JLabel lblIdent = new JLabel("Ident code");
-		lblIdent.setBounds(10, 470, 134, 14);
+		lblIdent.setBounds(10, 935, 134, 14);
 		add(lblIdent);
 		
 		JLabel lblStartBalance = new JLabel("Balance");
-		lblStartBalance.setBounds(243, 425, 115, 14);
+		lblStartBalance.setBounds(243, 890, 115, 14);
 		add(lblStartBalance);
 		
 		boxCardNumber = new JTextField();
 		boxCardNumber.setColumns(10);
-		boxCardNumber.setBounds(243, 343, 188, 20);
+		boxCardNumber.setBounds(243, 808, 188, 20);
 		boxCardNumber.setDocument(new JTextFieldLimit(16));
 		add(boxCardNumber);
 		
 		boxBalance = new JTextField();
 		boxBalance.setColumns(10);
-		boxBalance.setBounds(243, 443, 188, 20);
+		boxBalance.setBounds(243, 908, 188, 20);
 		boxBalance.setDocument(new JTextFieldLimit(255));
 		add(boxBalance);
 		
 		JLabel lblWithdraw = new JLabel("Withdrawal limit");
-		lblWithdraw.setBounds(243, 470, 115, 14);
+		lblWithdraw.setBounds(243, 935, 115, 14);
 		add(lblWithdraw);
 		
 		boxWithdraw = new JTextField();
 		boxWithdraw.setColumns(10);
-		boxWithdraw.setBounds(243, 488, 188, 20);
+		boxWithdraw.setBounds(243, 953, 188, 20);
 		boxWithdraw.setDocument(new JTextFieldLimit(255));
 		add(boxWithdraw);
+		
+		JButton button = new JButton("Clear fields");
+		button.setBounds(10, 402, 124, 23);
+		add(button);
+		
+		JButton button_1 = new JButton("Clear fields");
+		button_1.setBounds(144, 402, 124, 23);
+		add(button_1);
+		
+		JButton button_2 = new JButton("->");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		button_2.setBounds(617, 508, 57, 23);
+		add(button_2);
+		
+		JButton button_3 = new JButton("<-");
+		button_3.setBounds(617, 577, 57, 23);
+		add(button_3);
 	}
-
 }
