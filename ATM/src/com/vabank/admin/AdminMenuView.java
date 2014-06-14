@@ -38,7 +38,13 @@ public class AdminMenuView extends JPanel {
 		JButton btnLegalPerson = new JButton("Legal person");
 		btnLegalPerson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel contentPane = new LegalPersonView();
+				JPanel contentPane = null;
+				try {
+					contentPane = new LegalPersonView();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				MainView.instance.setContentPane(contentPane);
 				MainView.instance.invalidate();
 				MainView.instance.repaint();

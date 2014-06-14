@@ -152,57 +152,63 @@ public class NaturalPersonView extends JPanel {
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (table.getSelectedRow() >= 0) {
-					ResultSet resultSet2 = Database.getInstance().execute(
-							"SELECT name AS Name"
-									+ ", card_number AS CardNumber"
-									+ ", phone_number AS PhoneNumber"
-									+ ", ident_code AS IdentCode"
-									+ ", balance AS Balance"
-									+ " FROM natural_person"
-									+ " ORDER BY name");
-
-					for (int i = 0; i < table.getSelectedRow() + 1; i++) {
+				
+				int reply = JOptionPane.showConfirmDialog(MainView.instance, "Do you really want to delete selected natural person?", "Confirm your action", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					if (table.getSelectedRow() >= 0) {
+						ResultSet resultSet2 = Database.getInstance().execute(
+								"SELECT name AS Name"
+										+ ", card_number AS CardNumber"
+										+ ", phone_number AS PhoneNumber"
+										+ ", ident_code AS IdentCode"
+										+ ", balance AS Balance"
+										+ " FROM natural_person"
+										+ " ORDER BY name");
+	
+						for (int i = 0; i < table.getSelectedRow() + 1; i++) {
+							try {
+								resultSet2.next();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+	
+						//
 						try {
-							resultSet2.next();
-						} catch (SQLException e1) {
+							String code = resultSet2.getString(2);
+	
+							// statemenet needed
+	
+	
+							ResultSet resultSet3 = Database.getInstance().execute(
+										"DELETE" + " FROM natural_person"
+												+ " WHERE card_number = '"
+												+ code + "'");
+	
+							ResultSet resultSet4 = Database
+									.getInstance()
+									.execute(
+											"SELECT name AS Name"
+													+ ", card_number AS CardNumber"
+													+ ", phone_number AS PhoneNumber"
+													+ ", ident_code AS IdentCode"
+													+ ", balance AS Balance"
+													+ " FROM natural_person"
+													+ " ORDER BY name");
+	
+							ListTableModel model2 = ListTableModel
+									.createModelFromResultSet(resultSet4);
+							table.setModel(model2);
+	
+						} catch (SQLException e) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							e.printStackTrace();
 						}
 					}
-
-					//
-					try {
-						String code = resultSet2.getString(2);
-
-						// statemenet needed
-
-
-						ResultSet resultSet3 = Database.getInstance().execute(
-									"DELETE" + " FROM natural_person"
-											+ " WHERE card_number = '"
-											+ code + "'");
-
-						ResultSet resultSet4 = Database
-								.getInstance()
-								.execute(
-										"SELECT name AS Name"
-												+ ", card_number AS CardNumber"
-												+ ", phone_number AS PhoneNumber"
-												+ ", ident_code AS IdentCode"
-												+ ", balance AS Balance"
-												+ " FROM natural_person"
-												+ " ORDER BY name");
-
-						ListTableModel model2 = ListTableModel
-								.createModelFromResultSet(resultSet4);
-						table.setModel(model2);
-
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					else {
+						return;
 					}
-
 				}
 			}
 		});
