@@ -805,5 +805,9 @@ public class LegalPersonView extends JPanel {
 				"All natural persons in database");
 		lblAllNaturalPersons.setBounds(10, 350, 346, 14);
 		add(lblAllNaturalPersons);
+		
+		JLabel lblListLegalPers = new JLabel("All legal persons in database");
+		lblListLegalPers.setBounds(10, 44, 188, 14);
+		add(lblListLegalPers);
 	}
 }
