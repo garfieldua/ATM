@@ -9,8 +9,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import com.toedter.calendar.JDateChooser;
-import com.vabank.atm.ATMView;
-import com.vabank.atm.JTextFieldLimit;
 import com.vabank.atm.UITemplates;
 
 import javax.swing.JButton;
@@ -134,6 +132,11 @@ public class LegalPersonView extends JPanel {
 		jp3.setBounds(439, 367, 346, 145);
 		add(jp3);
 
+		final JLabel lblCountEmpl = new JLabel(
+				"Number of employees in company: " + table3.getRowCount());
+		lblCountEmpl.setBounds(439, 350, 346, 14);
+		add(lblCountEmpl);
+
 		// Processing clicking on a legal person
 		table.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -234,6 +237,9 @@ public class LegalPersonView extends JPanel {
 								}
 								// System.out.println(workerIds);
 
+								lblCountEmpl
+										.setText("Number of employees in company: "
+												+ table3.getRowCount());
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -365,7 +371,9 @@ public class LegalPersonView extends JPanel {
 							ListTableModel model2 = ListTableModel
 									.createModelFromResultSet(resultSet4);
 							table.setModel(model2);
-
+							lblCountEmpl
+									.setText("Number of employees in company: "
+											+ table3.getRowCount());
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -390,6 +398,16 @@ public class LegalPersonView extends JPanel {
 				boxRegAuth.setText("");
 				boxAddress.setText("");
 				boxSalary.setText("");
+				dateChooser.setDate(null);
+
+				// clearing workers in table
+				workerIds.clear();
+				if (model21[0].getRowCount() > 0) {
+					model21[0].removeRowRange(0, table3.getRowCount() - 1);
+				}
+
+				lblCountEmpl.setText("Number of employees in company: "
+						+ table3.getRowCount());
 			}
 		});
 		btnClearFields.setBounds(10, 216, 124, 23);
@@ -460,6 +478,8 @@ public class LegalPersonView extends JPanel {
 
 						table3.setModel(model21[0]);
 
+						lblCountEmpl.setText("Number of employees in company: "
+								+ table3.getRowCount());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -520,6 +540,8 @@ public class LegalPersonView extends JPanel {
 						e1.printStackTrace();
 					}
 					table3.setModel(model21[0]);
+					lblCountEmpl.setText("Number of employees in company: "
+							+ table3.getRowCount());
 					// System.out.println("============================");
 					// System.out.println(workerIds);
 				}
@@ -596,7 +618,7 @@ public class LegalPersonView extends JPanel {
 		add(lblDateOfRegistration);
 
 		JLabel lblSalary = new JLabel("Salary");
-		lblSalary.setBounds(366, 397, 63, 14);
+		lblSalary.setBounds(377, 396, 63, 14);
 		add(lblSalary);
 
 		boxSalary = new JTextField();
@@ -607,7 +629,102 @@ public class LegalPersonView extends JPanel {
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (table.getSelectedRow() >= 0) {
+					ResultSet resultSet2 = Database.getInstance().execute(
+							"SELECT full_name as FullName"
+									+ ", ident_code AS IdentCode"
+									+ ", funds AS Funds"
+									+ ", address AS Address"
+									+ ", num_cert_of_reg AS CertificateNumber"
+									+ " FROM legal_person"
+									+ " ORDER BY ident_code");
+
+					for (int i = 0; i < table.getSelectedRow() + 1; i++) {
+						try {
+							resultSet2.next();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+
+					try {
+						String ident_code = resultSet2.getString(2);
+
+						java.util.Date date = dateChooser.getDate();
+						SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd");
+						String st = f1.format(date);
+						// deleting all previously added workers
+						ResultSet resultSetDel = Database.getInstance()
+								.execute(
+										"DELETE " + " FROM employees"
+												+ " WHERE ident_code = '"
+												+ ident_code + "'");
+
+						// updating info about legal person
+						ResultSet resultSetUpd = Database.getInstance()
+								.execute(
+										"UPDATE legal_person"
+												+ " SET ident_code = '"
+												+ boxIdentCode.getText()
+												+ "', full_name = '"
+												+ boxFullName.getText()
+												+ "', short_name = '"
+												+ boxShortName.getText()
+												+ "', funds = "
+												+ boxFunds.getText()
+												+ ", address = '"
+												+ boxAddress.getText()
+												+ "', num_cert_of_reg = '"
+												+ boxCertNum.getText()
+												+ "', reg_cert_authority = '"
+												+ boxRegAuth.getText()
+												+ "', date_cert = '" + st
+												+ "' WHERE ident_code = '"
+												+ ident_code + "'");
+
+						// now, adding "new" updated workers from table3
+						Iterator<Employee> it = workerIds.iterator();
+						Employee current = null;
+
+						while (it.hasNext()) {
+							current = it.next();
+
+							ResultSet resultSetIns = Database.getInstance()
+									.execute(
+											"INSERT INTO employees (ident_code, card_number, salary)"
+													+ " VALUES ('"
+													+ boxIdentCode.getText()
+													+ "', '"
+													+ current.cardNumber
+													+ "', " + current.salary
+													+ ")");
+						}
+
+						ResultSet resultSet4 = Database
+								.getInstance()
+								.execute(
+										"SELECT full_name as FullName"
+												+ ", ident_code AS IdentCode"
+												+ ", funds AS Funds"
+												+ ", address AS Address"
+												+ ", num_cert_of_reg AS CertificateNumber"
+												+ " FROM legal_person"
+												+ " ORDER BY ident_code");
+
+						ListTableModel model3;
+						model3 = ListTableModel
+								.createModelFromResultSet(resultSet4);
+
+						table.setModel(model3);
+
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
+
 		});
 		btnUpdate.setBounds(10, 523, 89, 23);
 		add(btnUpdate);
@@ -619,7 +736,7 @@ public class LegalPersonView extends JPanel {
 				java.util.Date date = dateChooser.getDate();
 				SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd");
 				String st = f1.format(date);
-				
+
 				ResultSet resultSet3 = Database
 						.getInstance()
 						.execute(
@@ -639,9 +756,9 @@ public class LegalPersonView extends JPanel {
 										+ "', '"
 										+ boxRegAuth.getText()
 										+ "', '"
-										+ st + "')");
+										+ st
+										+ "')");
 
-				
 				Iterator<Employee> it = workerIds.iterator();
 				int i = 0;
 				Employee current = null;
@@ -657,11 +774,16 @@ public class LegalPersonView extends JPanel {
 									+ current.salary + ")");
 				}
 
-				ResultSet resultSet4 = Database.getInstance().execute(
-						"SELECT full_name as FullName" + ", ident_code AS IdentCode"
-								+ ", funds AS Funds" + ", address AS Address"
-								+ ", num_cert_of_reg AS CertificateNumber"
-								+ " FROM legal_person" + " ORDER BY ident_code");
+				ResultSet resultSet4 = Database
+						.getInstance()
+						.execute(
+								"SELECT full_name as FullName"
+										+ ", ident_code AS IdentCode"
+										+ ", funds AS Funds"
+										+ ", address AS Address"
+										+ ", num_cert_of_reg AS CertificateNumber"
+										+ " FROM legal_person"
+										+ " ORDER BY ident_code");
 
 				ListTableModel model3;
 				try {
@@ -678,5 +800,10 @@ public class LegalPersonView extends JPanel {
 		});
 		btnCreate.setBounds(109, 523, 89, 23);
 		add(btnCreate);
+
+		JLabel lblAllNaturalPersons = new JLabel(
+				"All natural persons in database");
+		lblAllNaturalPersons.setBounds(10, 350, 346, 14);
+		add(lblAllNaturalPersons);
 	}
 }
