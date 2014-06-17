@@ -34,7 +34,7 @@ public class Automated {
 					Calendar cal = Calendar.getInstance();
 					
 					int day = cal.get(Calendar.DAY_OF_MONTH);
-					if (day == 18) {
+					if (day == 17) {
 						//let's pay, if not yet paid
 						java.util.Date utilDate = cal.getTime();
 						Date date_now = new Date(utilDate.getTime());
@@ -80,6 +80,11 @@ public class Automated {
 												" WHERE ident_code = '" + ident_code + "'");
 								
 								//gj
+								
+								SimpleDateFormat f2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+								String st2 = f2.format(date_now);
+								
+								AutoMainView.logWrite(st2 + " - Payment from " + ident_code + " to " + card_number + ", amount: " + told_salary );
 								System.out.println("paid!");
 								
 							}
