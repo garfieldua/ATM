@@ -76,9 +76,16 @@ public class PinInputView extends JPanel {
 					pinField.setText("");
 					pinField.requestFocus();
 					
+					String sError = "Wrong pin number";
+					//check if card is frozen now
+					Boolean frozen = (Boolean) jsonObj.get("cardnum_frozen");
+					if (frozen) {
+						sError = "You've inputted wrong PIN too many times. Your card is now frozen";
+					}
+					
 					//incorrect pin!
 					JOptionPane.showMessageDialog(ATMView.instance,
-						    "Wrong pin number",
+							sError,
 						    "Error",
 						    JOptionPane.ERROR_MESSAGE);
 				}
