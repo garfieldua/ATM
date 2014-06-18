@@ -34,7 +34,7 @@ public class Automated {
 					Calendar cal = Calendar.getInstance();
 					
 					int day = cal.get(Calendar.DAY_OF_MONTH);
-					if (day == 18) {
+					if (day == 19) {
 						//let's pay, if not yet paid
 						java.util.Date utilDate = cal.getTime();
 						Date date_now = new Date(utilDate.getTime());
