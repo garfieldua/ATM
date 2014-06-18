@@ -60,13 +60,15 @@ public class TransferAmountView extends JPanel {
 				try 
 				{
 					Integer amount = Integer.parseInt(samount);
+					System.out.println(samount);
 					
 					if (amount > 0) {
 						
 							JSONObject jsonObj = null;
 							jsonObj = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 							String strMoney = (String) jsonObj.get("balance");
-							int moneyAmount = Integer.parseInt(strMoney);
+							//int moneyAmount = Integer.parseInt(strMoney);
+							double moneyAmount = Double.parseDouble(strMoney);
 	
 							if (moneyAmount >= amount) {
 								//CashWithdrawalView.toWithdrawAmount = amount;

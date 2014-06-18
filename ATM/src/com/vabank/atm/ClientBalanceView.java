@@ -3,6 +3,8 @@ package com.vabank.atm;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -36,11 +38,15 @@ public class ClientBalanceView extends JPanel {
 
 		// adding commas for output
 		Locale locale = new Locale("en", "US");
-		int moneyAmount = Integer.parseInt(strMoney);
-		String srt = NumberFormat.getInstance(locale).format(moneyAmount);
+		//int moneyAmount = Integer.parseInt(strMoney);
+		double moneyAmount = Double.parseDouble(strMoney);
+		DecimalFormatSymbols s = new DecimalFormatSymbols();
+		s.setDecimalSeparator('.');
+		DecimalFormat df = new DecimalFormat("#,##0.00", s);
+		//String srt = NumberFormat.getInstance(locale).format(moneyAmount);
 		
 		JLabel lblMoneyAmount = new JLabel("");
-		lblMoneyAmount.setText(srt + " UAH");
+		lblMoneyAmount.setText(df.format(moneyAmount) + " UAH");
 		lblMoneyAmount.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMoneyAmount.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		lblMoneyAmount.setBounds(0, 215, 784, 63);

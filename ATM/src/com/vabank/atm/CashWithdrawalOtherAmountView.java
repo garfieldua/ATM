@@ -71,8 +71,9 @@ public class CashWithdrawalOtherAmountView extends JPanel {
 														.getText());
 								String strMoney2 = (String) jsonObj2
 										.get("balance");
-								int moneyAmount = Integer.parseInt(strMoney2);
-
+								//int moneyAmount = Integer.parseInt(strMoney2);
+								double moneyAmount = Double.parseDouble(strMoney2);
+								
 								if (moneyAmount >= amount) {
 									CashWithdrawalView.toWithdrawAmount = amount;
 									CashWithdrawalView.withdraw();

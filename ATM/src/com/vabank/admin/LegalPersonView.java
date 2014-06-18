@@ -209,7 +209,7 @@ public class LegalPersonView extends JPanel {
 														+ " FROM natural_person INNER JOIN employees ON natural_person.card_number = employees.card_number"
 														+ " WHERE employees.ident_code = '"
 														+ idcode + "'"
-														+ " ORDER BY name");
+														+ " ORDER BY natural_person.card_number");
 
 								model21[0] = ListTableModel
 										.createModelFromResultSet(resultSet3);
@@ -228,7 +228,7 @@ public class LegalPersonView extends JPanel {
 														+ " FROM natural_person INNER JOIN employees ON natural_person.card_number = employees.card_number"
 														+ " WHERE employees.ident_code = '"
 														+ idcode + "'"
-														+ " ORDER BY name");
+														+ " ORDER BY natural_person.card_number");
 								workerIds.clear();
 
 								while (resultSet4.next()) {
@@ -442,6 +442,20 @@ public class LegalPersonView extends JPanel {
 								}
 							}
 
+							// now, we need to check if selected for hiring person is already
+							// working for some other organization. if so, error would be given
+							
+							ResultSet resultSetCheck = Database
+									.getInstance()
+									.execute(
+											"SELECT * FROM employees WHERE card_number = '"+ resultSet20.getString(2) +"'");
+							if (resultSetCheck.isBeforeFirst()) {
+								JOptionPane.showMessageDialog(ATMView.instance,
+										"This natural person is already working for another company", "Error",
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							
 							try {
 								// System.out.println("===============");
 								// System.out.println(resultSet20.getString(2));
@@ -510,7 +524,7 @@ public class LegalPersonView extends JPanel {
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-				} catch (java.lang.NumberFormatException e) {
+				} catch (java.lang.NumberFormatException | SQLException e) {
 					// not number given
 					boxSalary.setText("");
 					boxSalary.requestFocus();
@@ -628,7 +642,7 @@ public class LegalPersonView extends JPanel {
 		boxCertNum.setBounds(404, 261, 158, 20);
 		add(boxCertNum);
 
-		JLabel lblRegistrationAuthority = new JLabel("Registration authority");
+		JLabel lblRegistrationAuthority = new JLabel("Correspondent account");
 		lblRegistrationAuthority.setBounds(404, 292, 158, 14);
 		add(lblRegistrationAuthority);
 

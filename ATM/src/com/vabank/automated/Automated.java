@@ -34,7 +34,7 @@ public class Automated {
 					Calendar cal = Calendar.getInstance();
 					
 					int day = cal.get(Calendar.DAY_OF_MONTH);
-					if (day == 17) {
+					if (day == 18) {
 						//let's pay, if not yet paid
 						java.util.Date utilDate = cal.getTime();
 						Date date_now = new Date(utilDate.getTime());
@@ -51,15 +51,20 @@ public class Automated {
 							
 							if (resultSet2.next() && resultSet3.next()) {
 								double payment_fee = resultSet2.getDouble(1);
-								int funds = resultSet2.getInt(2);
-								int curtaxes = resultSet2.getInt(3);
+								//int funds = resultSet2.getInt(2);
+								//int curtaxes = resultSet2.getInt(3);
 								
-								int balance = resultSet3.getInt(1);
+								//int balance = resultSet3.getInt(1);
+								double funds = resultSet2.getDouble(2);
+								double curtaxes = resultSet2.getDouble(3);
+								
+								double balance = resultSet3.getDouble(1);
 
 								//total update database
 								
 								//natural person
-								int newbalance = (int) (balance + told_salary * (1 - payment_fee));
+								//int newbalance = (int) (balance + told_salary * (1 - payment_fee));
+								double newbalance = balance + told_salary * (1 - payment_fee);
 								ResultSet resultSet4 = Database.getInstance().execute(
 										"UPDATE natural_person" + " SET balance = " + newbalance +
 												" WHERE card_number = '" + card_number + "'");
@@ -73,8 +78,11 @@ public class Automated {
 												"' WHERE card_number = '" + card_number + "' AND ident_code = '" + ident_code + "'");
 								
 								// legal person
-								int newfunds = funds - told_salary;
-								int newtaxes = (int) (curtaxes + told_salary * payment_fee);
+								//int newfunds = funds - told_salary;
+								//int newtaxes = (int) (curtaxes + told_salary * payment_fee);
+								double newfunds = funds - told_salary;
+								double newtaxes = curtaxes + told_salary * payment_fee;
+								
 								ResultSet resultSet6 = Database.getInstance().execute(
 										"UPDATE legal_person" + " SET funds = " + newfunds + ", taxes = " + newtaxes +
 												" WHERE ident_code = '" + ident_code + "'");
