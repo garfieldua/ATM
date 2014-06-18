@@ -46,6 +46,9 @@ public class LegalPersonView extends JPanel {
 	private JTextField boxRegAuth;
 	private JTextField boxAddress;
 	private JTextField boxSalary;
+	private JTextField boxTaxes;
+	private JTextField boxDeposit;
+	private JTextField boxTaxesPercentage;
 
 	/**
 	 * Create the panel.
@@ -155,6 +158,9 @@ public class LegalPersonView extends JPanel {
 													+ ", num_cert_of_reg AS CertificateNumber"
 													+ ", reg_cert_authority AS RegAuth"
 													+ ", date_cert AS DateReg"
+													+ ", payment_fee"
+													+ ", deposit_bonus"
+													+ ", taxes"
 													+ " FROM legal_person"
 													+ " ORDER BY ident_code");
 
@@ -195,6 +201,15 @@ public class LegalPersonView extends JPanel {
 
 								Date date = resultSet2.getDate(8);
 								dateChooser.setDate(date);
+								
+								String payment_fee = resultSet2.getString(9);
+								boxTaxesPercentage.setText(payment_fee);
+								
+								String deposit_bonus = resultSet2.getString(10);
+								boxDeposit.setText(deposit_bonus);
+								
+								String taxes = resultSet2.getString(11);
+								boxTaxes.setText(taxes);
 
 								// System.out.println(idcode);
 
@@ -385,7 +400,7 @@ public class LegalPersonView extends JPanel {
 				}
 			}
 		});
-		btnDelete.setBounds(696, 218, 89, 23);
+		btnDelete.setBounds(710, 216, 75, 23);
 		add(btnDelete);
 
 		JButton btnClearFields = new JButton("Clear fields");
@@ -399,6 +414,9 @@ public class LegalPersonView extends JPanel {
 				boxRegAuth.setText("");
 				boxAddress.setText("");
 				boxSalary.setText("");
+				boxTaxes.setText("");
+				boxTaxesPercentage.setText("");
+				boxDeposit.setText("");
 				dateChooser.setDate(null);
 
 				// clearing workers in table
@@ -411,7 +429,7 @@ public class LegalPersonView extends JPanel {
 						+ table3.getRowCount());
 			}
 		});
-		btnClearFields.setBounds(10, 216, 124, 23);
+		btnClearFields.setBounds(598, 216, 102, 23);
 		add(btnClearFields);
 
 		// Hiring natural persons
@@ -727,7 +745,13 @@ public class LegalPersonView extends JPanel {
 												+ "', reg_cert_authority = '"
 												+ boxRegAuth.getText()
 												+ "', date_cert = '" + st
-												+ "' WHERE ident_code = '"
+												+ "', payment_fee = "
+												+ boxTaxesPercentage.getText()
+												+ ", deposit_bonus = "
+												+ boxDeposit.getText()
+												+ ", taxes = "
+												+ boxTaxes.getText()
+												+ " WHERE ident_code = '"
 												+ ident_code + "'");
 
 						// now, adding "new" updated workers from table3
@@ -787,7 +811,7 @@ public class LegalPersonView extends JPanel {
 				ResultSet resultSet3 = Database
 						.getInstance()
 						.execute(
-								"INSERT INTO legal_person (ident_code, full_name, short_name, funds, address, num_cert_of_reg, reg_cert_authority, date_cert)"
+								"INSERT INTO legal_person (ident_code, full_name, short_name, funds, address, num_cert_of_reg, reg_cert_authority, date_cert, payment_fee, deposit_bonus, taxes)"
 										+ " VALUES ('"
 										+ boxIdentCode.getText()
 										+ "', '"
@@ -804,7 +828,13 @@ public class LegalPersonView extends JPanel {
 										+ boxRegAuth.getText()
 										+ "', '"
 										+ st
-										+ "')");
+										+ "', "
+										+ boxTaxesPercentage.getText()
+										+ ", "
+										+ boxDeposit.getText()
+										+ ", "
+										+ boxTaxes.getText()
+										+")");
 
 				Iterator<Employee> it = workerIds.iterator();
 				int i = 0;
@@ -856,5 +886,32 @@ public class LegalPersonView extends JPanel {
 		JLabel lblListLegalPers = new JLabel("All legal persons in database");
 		lblListLegalPers.setBounds(10, 44, 188, 14);
 		add(lblListLegalPers);
+		
+		boxTaxes = new JTextField();
+		boxTaxes.setColumns(10);
+		boxTaxes.setBounds(10, 219, 158, 20);
+		add(boxTaxes);
+		
+		JLabel lblTaxesToPay = new JLabel("Taxes to pay");
+		lblTaxesToPay.setBounds(10, 205, 124, 14);
+		add(lblTaxesToPay);
+		
+		JLabel lblDepositBonus = new JLabel("Deposit bonus");
+		lblDepositBonus.setBounds(207, 205, 124, 14);
+		add(lblDepositBonus);
+		
+		boxDeposit = new JTextField();
+		boxDeposit.setColumns(10);
+		boxDeposit.setBounds(207, 219, 158, 20);
+		add(boxDeposit);
+		
+		boxTaxesPercentage = new JTextField();
+		boxTaxesPercentage.setColumns(10);
+		boxTaxesPercentage.setBounds(404, 219, 158, 20);
+		add(boxTaxesPercentage);
+		
+		JLabel lblSalaryTaxes = new JLabel("Salary taxes");
+		lblSalaryTaxes.setBounds(404, 205, 124, 14);
+		add(lblSalaryTaxes);
 	}
 }
