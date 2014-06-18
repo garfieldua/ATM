@@ -64,7 +64,8 @@ public class CashWithdrawalView extends JPanel {
 					JSONObject jsonObj2 = null;
 					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 					String strMoney2 = (String) jsonObj2.get("balance");
-					int moneyAmount = Integer.parseInt(strMoney2);
+					//int moneyAmount = Integer.parseInt(strMoney2);
+					double moneyAmount = Double.parseDouble(strMoney2);
 					
 					if (moneyAmount >= 200) {
 						toWithdrawAmount = 200;
@@ -112,7 +113,8 @@ public class CashWithdrawalView extends JPanel {
 					JSONObject jsonObj2 = null;
 					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 					String strMoney2 = (String) jsonObj2.get("balance");
-					int moneyAmount = Integer.parseInt(strMoney2);
+					//int moneyAmount = Integer.parseInt(strMoney2);
+					double moneyAmount = Double.parseDouble(strMoney2);
 					
 					if (moneyAmount >= 100) {
 						toWithdrawAmount = 100;
@@ -160,7 +162,8 @@ public class CashWithdrawalView extends JPanel {
 					JSONObject jsonObj2 = null;
 					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 					String strMoney2 = (String) jsonObj2.get("balance");
-					int moneyAmount = Integer.parseInt(strMoney2);
+					//int moneyAmount = Integer.parseInt(strMoney2);
+					double moneyAmount = Double.parseDouble(strMoney2);
 					
 					if (moneyAmount >= 50) {
 						toWithdrawAmount = 50;
@@ -223,7 +226,8 @@ public class CashWithdrawalView extends JPanel {
 					JSONObject jsonObj2 = null;
 					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 					String strMoney2 = (String) jsonObj2.get("balance");
-					int moneyAmount = Integer.parseInt(strMoney2);
+					//int moneyAmount = Integer.parseInt(strMoney2);
+					double moneyAmount = Double.parseDouble(strMoney2);
 					
 					if (moneyAmount >= 2000) {
 						toWithdrawAmount = 2000;
@@ -271,7 +275,8 @@ public class CashWithdrawalView extends JPanel {
 					JSONObject jsonObj2 = null;
 					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 					String strMoney2 = (String) jsonObj2.get("balance");
-					int moneyAmount = Integer.parseInt(strMoney2);
+					//int moneyAmount = Integer.parseInt(strMoney2);
+					double moneyAmount = Double.parseDouble(strMoney2);
 					
 					if (moneyAmount >= 1000) {
 						toWithdrawAmount = 1000;
@@ -319,7 +324,8 @@ public class CashWithdrawalView extends JPanel {
 					JSONObject jsonObj2 = null;
 					jsonObj2 = UrlConnector.getData("balance.php?card_num=" + CardInputView.cardNumberField.getText() );
 					String strMoney2 = (String) jsonObj2.get("balance");
-					int moneyAmount = Integer.parseInt(strMoney2);
+					//int moneyAmount = Integer.parseInt(strMoney2);
+					double moneyAmount = Double.parseDouble(strMoney2);
 					
 					if (moneyAmount >= 500) {
 						toWithdrawAmount = 500;
