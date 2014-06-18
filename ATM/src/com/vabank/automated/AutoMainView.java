@@ -1,4 +1,4 @@
-package com.vabank.admin;
+package com.vabank.automated;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -7,13 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.vabank.atm.ATMView;
-import com.vabank.atm.CardInputView;
+public class AutoMainView extends JFrame {
 
-@SuppressWarnings("serial")
-public class MainView extends JFrame {
-
-	public static MainView instance = null;
 	private JPanel contentPane;
 
 	/**
@@ -23,8 +18,7 @@ public class MainView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainView frame = new MainView();
-					MainView.instance = frame;
+					AutoMainView frame = new AutoMainView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,18 +30,15 @@ public class MainView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainView() {
-		Database.getInstance();
-		
-		setTitle("Admin panel");
-		setResizable(false);
+	public AutoMainView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
-		contentPane = new AdminMenuView();
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		setLocationRelativeTo(ATMView.instance);
+		
+		Automated.start();
 	}
 
 }
