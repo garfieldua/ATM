@@ -82,6 +82,7 @@ public class PinInputView extends JPanel {
 					if (frozen) {
 						sError = "You've inputted wrong PIN too many times. Your card is now frozen";
 					}
+					//some comment for push to github
 					
 					//incorrect pin!
 					JOptionPane.showMessageDialog(ATMView.instance,
