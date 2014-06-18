@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import com.toedter.calendar.JDateChooser;
+import com.vabank.atm.ATMView;
 import com.vabank.atm.UITemplates;
 
 import javax.swing.JButton;
@@ -417,74 +418,106 @@ public class LegalPersonView extends JPanel {
 		JButton btnHire = new JButton("Hire");
 		btnHire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (table2.getSelectedRow() >= 0) {
-					ResultSet resultSet20 = Database.getInstance().execute(
-							"SELECT name AS Name"
-									+ ", card_number AS CardNumber"
-									+ ", ident_code AS IdentCode"
-									+ " FROM natural_person"
-									+ " ORDER BY card_number");
+				// cheching if salary is not negative
+				try {
+					Integer sal = Integer.parseInt(boxSalary.getText());
 
-					for (int i = 0; i < table2.getSelectedRow() + 1; i++) {
-						try {
-							resultSet20.next();
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
+					if (sal >= 0) {
+						if (table2.getSelectedRow() >= 0) {
+							ResultSet resultSet20 = Database
+									.getInstance()
+									.execute(
+											"SELECT name AS Name"
+													+ ", card_number AS CardNumber"
+													+ ", ident_code AS IdentCode"
+													+ " FROM natural_person"
+													+ " ORDER BY card_number");
 
-					try {
-						// System.out.println("===============");
-						// System.out.println(resultSet20.getString(2));
-
-						Employee temp = new Employee(Integer.parseInt(boxSalary
-								.getText()), resultSet20.getString(2));
-						workerIds.add(temp);
-
-						// System.out.println("After adding:");
-						// System.out.println(workerIds);
-						// System.out.println("===============");
-
-						ResultSet resultSet21 = Database.getInstance().execute(
-								"SELECT name AS Name"
-										+ ", card_number AS CardNumber"
-										+ ", ident_code AS IdentCode"
-										+ " FROM natural_person"
-										+ " ORDER BY card_number");
-
-						model21[0] = ListTableModel
-								.createModelFromResultSet(resultSet21);
-
-						ResultSet resultSet22 = Database.getInstance().execute(
-								"SELECT name AS Name"
-										+ ", card_number AS CardNumber"
-										+ ", ident_code AS IdentCode"
-										+ " FROM natural_person"
-										+ " ORDER BY card_number");
-
-						int curpos = 0;
-						while (resultSet22.next()) {
-							Employee temp2 = new Employee(0, resultSet22
-									.getString(2));
-							// System.out.println(temp2);
-							if (!workerIds.contains(temp2)) {
-								// System.out.println("here!");
-								model21[0].removeRowRange(curpos, curpos);
-								curpos--;
+							for (int i = 0; i < table2.getSelectedRow() + 1; i++) {
+								try {
+									resultSet20.next();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 							}
-							curpos++;
+
+							try {
+								// System.out.println("===============");
+								// System.out.println(resultSet20.getString(2));
+
+								Employee temp = new Employee(Integer
+										.parseInt(boxSalary.getText()),
+										resultSet20.getString(2));
+								workerIds.add(temp);
+
+								// System.out.println("After adding:");
+								// System.out.println(workerIds);
+								// System.out.println("===============");
+
+								ResultSet resultSet21 = Database
+										.getInstance()
+										.execute(
+												"SELECT name AS Name"
+														+ ", card_number AS CardNumber"
+														+ ", ident_code AS IdentCode"
+														+ " FROM natural_person"
+														+ " ORDER BY card_number");
+
+								model21[0] = ListTableModel
+										.createModelFromResultSet(resultSet21);
+
+								ResultSet resultSet22 = Database
+										.getInstance()
+										.execute(
+												"SELECT name AS Name"
+														+ ", card_number AS CardNumber"
+														+ ", ident_code AS IdentCode"
+														+ " FROM natural_person"
+														+ " ORDER BY card_number");
+
+								int curpos = 0;
+								while (resultSet22.next()) {
+									Employee temp2 = new Employee(0,
+											resultSet22.getString(2));
+									// System.out.println(temp2);
+									if (!workerIds.contains(temp2)) {
+										// System.out.println("here!");
+										model21[0].removeRowRange(curpos,
+												curpos);
+										curpos--;
+									}
+									curpos++;
+								}
+
+								table3.setModel(model21[0]);
+
+								lblCountEmpl
+										.setText("Number of employees in company: "
+												+ table3.getRowCount());
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
 						}
-
-						table3.setModel(model21[0]);
-
-						lblCountEmpl.setText("Number of employees in company: "
-								+ table3.getRowCount());
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} else {
+						boxSalary.setText("");
+						boxSalary.requestFocus();
+						
+						JOptionPane.showMessageDialog(ATMView.instance,
+								"Salary must be positive", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
 					}
+				} catch (java.lang.NumberFormatException e) {
+					// not number given
+					boxSalary.setText("");
+					boxSalary.requestFocus();
 
+					JOptionPane.showMessageDialog(ATMView.instance,
+							"Number must be given", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -805,7 +838,7 @@ public class LegalPersonView extends JPanel {
 				"All natural persons in database");
 		lblAllNaturalPersons.setBounds(10, 350, 346, 14);
 		add(lblAllNaturalPersons);
-		
+
 		JLabel lblListLegalPers = new JLabel("All legal persons in database");
 		lblListLegalPers.setBounds(10, 44, 188, 14);
 		add(lblListLegalPers);
