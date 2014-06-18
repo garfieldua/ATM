@@ -20,7 +20,7 @@ public class Automated {
 			System.out.println("tick..");
 			
 			ResultSet resultSet = Database.getInstance().execute(
-					"SELECT ident_code, card_number, salary, last_paid FROM `employees`");
+					"SELECT ident_code, card_number, salary, last_paid, last_deposit FROM `employees`");
 			
 			try {
 				while (resultSet.next()) {
@@ -29,7 +29,7 @@ public class Automated {
 					String ident_code = resultSet.getString(1);
 					String card_number = resultSet.getString(2);
 					Date last_paid = resultSet.getDate(4);
-					
+					Date last_deposit = resultSet.getDate(5);
 					
 					Calendar cal = Calendar.getInstance();
 					
@@ -99,6 +99,64 @@ public class Automated {
 							
 						}
 					}
+					
+					//
+					//kopilka
+					
+					java.util.Date utilDate = cal.getTime();
+					Date date_now = new Date(utilDate.getTime());
+					
+					if (! (date_now.getDay() == last_deposit.getDay() && date_now.getMonth() == last_deposit.getMonth() && date_now.getYear() == last_deposit.getYear() )) {
+						ResultSet resultSet2 = Database.getInstance().execute(
+								"SELECT payment_fee, funds,taxes, deposit_bonus FROM `legal_person` WHERE ident_code = '" + ident_code + "'");
+						
+						ResultSet resultSet3 = Database.getInstance().execute(
+								"SELECT balance FROM `natural_person` WHERE card_number = '" + card_number + "'");
+						
+						
+						if (resultSet2.next() && resultSet3.next()) {
+							double funds = resultSet2.getDouble(2);
+							double balance = resultSet3.getDouble(1);
+							
+							//now we calculate how much money we give the person
+							
+							double year_deposit_bonus = resultSet2.getDouble(4);
+							double day_deposit_bonus = year_deposit_bonus / 365;
+							
+							double bonusmoney = balance * day_deposit_bonus;
+							
+							double newbalance = balance + bonusmoney;
+							double newfunds = funds - bonusmoney;
+							
+							//total update database
+							
+							//natural person
+							ResultSet resultSet4 = Database.getInstance().execute(
+									"UPDATE natural_person" + " SET balance = " + newbalance +
+											" WHERE card_number = '" + card_number + "'");
+							
+							//employee
+							SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd");
+							String st = f1.format(date_now);
+							
+							ResultSet resultSet5 = Database.getInstance().execute(
+									"UPDATE employees" + " SET last_deposit = '" + st +
+											"' WHERE card_number = '" + card_number + "' AND ident_code = '" + ident_code + "'");
+							
+							// legal person
+							ResultSet resultSet6 = Database.getInstance().execute(
+									"UPDATE legal_person" + " SET funds = " + newfunds + 
+											" WHERE ident_code = '" + ident_code + "'");
+							
+							//gj
+							SimpleDateFormat f2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+							String st2 = f2.format(date_now);
+							
+							AutoMainView.logWrite(st2 + " - Deposit bonus from " + ident_code + " to " + card_number + ", amount: " + bonusmoney );
+							System.out.println("deposit bonus given!");
+						}
+					}
+					
 					
 				}
 			} catch (SQLException e1) {
